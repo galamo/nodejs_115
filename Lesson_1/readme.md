@@ -9,3 +9,9 @@
 1. create new entry point 
 2. HTTP GET /users
 3. the API will return 10 random users ( create json )
+
+
+4. create new entry point
+5. HTTP GET /search
+6. query param id=userId
+7. if user id is not sent in the middleware - send back bad request status 400
