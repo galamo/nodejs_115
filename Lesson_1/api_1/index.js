@@ -3,17 +3,13 @@ const PORT = 3000
 const app = express();
 
 
-
-
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}]=>${req.originalUrl}`)
     next()
 })
-
 app.get("/hc", (req, res, next) => {
     res.json({ message: `Api is up _ ${new Date().toISOString()}` })
 })
-
 app.use((req, res, next) => {
     const key = req.query.key
     if (key === "api_token") {
@@ -21,15 +17,10 @@ app.use((req, res, next) => {
     } else {
         return next(new Error("UNAUTH"))
     }
-
 })
-
 app.get("/users", (req, res, next) => {
     res.json({ message: "users" })
 })
-
-
-
 app.use((error, req, res, next) => {
     switch (error.message) {
         case "UNAUTH": {
