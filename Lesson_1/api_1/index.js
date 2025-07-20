@@ -5,8 +5,10 @@ const app = express();
 
 app.get("/hc", (req, res, next) => {
     const queryParams = req.query;
+    console.log(queryParams)
     res.send({ message: `Api is up _ ${new Date().toISOString()}` })
 })
+
 
 
 app.listen(PORT, (err) => {
