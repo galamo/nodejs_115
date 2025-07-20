@@ -16,3 +16,10 @@
 6. query param id=userId
 7. if user id is not sent in the middleware - send back bad request status 400
 
+# Homework 20-7
+Create API from scratch
+1. API - login  POST /login 
+2. API - register POST /register - { userName, password } 
+- when calling register the username and password will saved in users array in the server ( global param)
+- when calling login the api will check if the username and passowrd exist in the users array - return 200 OK or 401
+- use bodyParser middleware
