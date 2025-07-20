@@ -19,6 +19,8 @@ app.use((req, res, next) => {
     }
 })
 app.get("/users", (req, res, next) => {
+    // for (let index = 0; index < 9999999999; index++) {
+    // } // DONT DO THIS
     res.json({ message: "users" })
 })
 app.use((error, req, res, next) => {

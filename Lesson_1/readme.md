@@ -15,3 +15,4 @@
 5. HTTP GET /search
 6. query param id=userId
 7. if user id is not sent in the middleware - send back bad request status 400
+
