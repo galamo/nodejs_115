@@ -1,19 +1,17 @@
 import express, { Request, Response, NextFunction } from "express"
 import dotenv from "dotenv"
 import apiToken from "./middleware/api.token";
+import requestDuration from "./middleware/requestDuration";
+import limiter from "./middleware/rateLimiter"
 
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
 
-app.use((req, res, next) => {
-    console.log(`[Start ${new Date().toISOString()}]=>${req.originalUrl}`)
-    next()
-    res.on("finish", () => {
-        console.log(`[Finish ${new Date().toISOString()}]=>${req.originalUrl}`)
-    })
-})
+
+app.use(requestDuration)
 app.use(apiToken)
+app.use(limiter)
 
 app.get("/protected", (req, res, next) => {
     res.send("Talliya using notebook")
