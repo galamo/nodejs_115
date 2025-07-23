@@ -8,18 +8,26 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const api_token_1 = __importDefault(require("./middleware/api.token"));
 const requestDuration_1 = __importDefault(require("./middleware/requestDuration"));
 const rateLimiter_1 = __importDefault(require("./middleware/rateLimiter"));
+const auth_1 = __importDefault(require("./controllers/auth"));
+const httpStatus_1 = require("./enum/httpStatus");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+app.use(express_1.default.json());
 app.use(requestDuration_1.default);
 app.use(api_token_1.default);
 app.use(rateLimiter_1.default);
-app.get("/protected", (req, res, next) => {
-    res.send("Talliya using notebook");
+app.get("/hc", (req, res, next) => {
+    res.send("Api is Running");
 });
+app.use("/auth", auth_1.default);
 app.use((error, req, res, next) => {
+    console.log(error.message);
     switch (error.message) {
-        case "UNAUTH": {
+        case httpStatus_1.ERRORS.BAD_REQUEST: {
+            return res.status(400).send("Bad Request");
+        }
+        case httpStatus_1.ERRORS.UNAUTH: {
             return res.status(401).send("Unauthorized___");
         }
         default: {

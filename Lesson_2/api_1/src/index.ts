@@ -4,22 +4,32 @@ import apiToken from "./middleware/api.token";
 import requestDuration from "./middleware/requestDuration";
 import limiter from "./middleware/rateLimiter"
 
+import authRouter from "./controllers/auth"
+import { ERRORS } from "./enum/httpStatus";
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
 
 
+app.use(express.json())
 app.use(requestDuration)
 app.use(apiToken)
 app.use(limiter)
 
-app.get("/protected", (req, res, next) => {
-    res.send("Talliya using notebook")
+app.get("/hc", (req, res, next) => {
+    res.send("Api is Running")
 })
 
+app.use("/auth", authRouter)
+
+
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    console.log(error.message)
     switch (error.message) {
-        case "UNAUTH": {
+        case ERRORS.BAD_REQUEST: {
+            return res.status(400).send("Bad Request")
+        }
+        case ERRORS.UNAUTH: {
             return res.status(401).send("Unauthorized___")
         }
         default: {
