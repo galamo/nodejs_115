@@ -1,5 +1,7 @@
-import express from "express"
+import express, { Request, Response, NextFunction } from "express"
 import dotenv from "dotenv"
+import apiToken from "./middleware/api.token";
+
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -11,10 +13,24 @@ app.use((req, res, next) => {
         console.log(`[Finish ${new Date().toISOString()}]=>${req.originalUrl}`)
     })
 })
+app.use(apiToken)
 
 app.get("/protected", (req, res, next) => {
     res.send("Talliya using notebook")
 })
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    switch (error.message) {
+        case "UNAUTH": {
+            return res.status(401).send("Unauthorized___")
+        }
+        default: {
+            return res.status(500).send("Something went wrong Yam is working to fix it & flight to America")
+        }
+    }
+
+})
+
 
 app.listen(PORT, (err) => {
     if (err) {

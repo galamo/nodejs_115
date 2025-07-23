@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const api_token_1 = __importDefault(require("./middleware/api.token"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
@@ -15,8 +16,19 @@ app.use((req, res, next) => {
         console.log(`[Finish ${new Date().toISOString()}]=>${req.originalUrl}`);
     });
 });
+app.use(api_token_1.default);
 app.get("/protected", (req, res, next) => {
     res.send("Talliya using notebook");
+});
+app.use((error, req, res, next) => {
+    switch (error.message) {
+        case "UNAUTH": {
+            return res.status(401).send("Unauthorized___");
+        }
+        default: {
+            return res.status(500).send("Something went wrong Yam is working to fix it & flight to America");
+        }
+    }
 });
 app.listen(PORT, (err) => {
     if (err) {
