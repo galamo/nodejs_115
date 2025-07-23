@@ -8,6 +8,13 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+app.use((req, res, next) => {
+    console.log(`[Start ${new Date().toISOString()}]=>${req.originalUrl}`);
+    next();
+    res.on("finish", () => {
+        console.log(`[Finish ${new Date().toISOString()}]=>${req.originalUrl}`);
+    });
+});
 app.get("/protected", (req, res, next) => {
     res.send("Talliya using notebook");
 });
