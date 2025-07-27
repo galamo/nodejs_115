@@ -5,6 +5,8 @@ import requestDuration from "./middleware/requestDuration";
 import limiter from "./middleware/rateLimiter"
 
 import authRouter from "./controllers/auth"
+import expensesRouter from "./controllers/expenses"
+
 import { ERRORS } from "./enum/httpStatus";
 dotenv.config()
 const app = express();
@@ -22,6 +24,8 @@ app.get("/hc", (req, res, next) => {
 
 app.use("/auth", authRouter)
 
+// jwt.verify - complete the logic to protect this entrypoint
+app.use("/expenses", expensesRouter)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     console.log(error.message)

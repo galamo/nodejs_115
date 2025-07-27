@@ -41,6 +41,9 @@ const express_1 = __importDefault(require("express"));
 const loginHandler_1 = require("./loginHandler");
 const httpStatus_1 = require("../../enum/httpStatus");
 const z = __importStar(require("zod"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const router = express_1.default.Router();
 const User = z.object({
     userName: z.email().max(30),
@@ -63,11 +66,9 @@ const mappingSchemaValidation = {
 };
 function authInputValidation(req, res, next) {
     const url = req.url.replace("/", "");
-    console.log(url, mappingSchemaValidation[url]);
     const currentSchema = mappingSchemaValidation[url];
     const validation = currentSchema.safeParse(req.body);
     if (!validation.success) {
-        console.log(validation);
         throw new Error(httpStatus_1.ERRORS.BAD_REQUEST);
     }
     else {
@@ -78,8 +79,12 @@ router.post("/login", authInputValidation, (req, res, next) => {
     try {
         const { userName, password } = req.body;
         const foundUser = (0, loginHandler_1.login)({ userName, password });
-        if (foundUser)
-            return res.json({ message: "User logged in successfully" });
+        if (foundUser) {
+            console.log(process.env.SECRET);
+            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true, }, process.env.SECRET || "secret");
+            // sign JWT token for user
+            return res.setHeader("Authorization", token).json({ message: "User logged in successfully", token });
+        }
         else
             throw new Error(httpStatus_1.ERRORS.UNAUTH);
     }

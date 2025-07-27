@@ -2,6 +2,9 @@ import express, { Request, Response, NextFunction } from "express"
 import { login } from "./loginHandler"
 import { ERRORS } from "../../enum/httpStatus"
 import * as z from "zod";
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config()
 const router = express.Router()
 
 
@@ -34,11 +37,9 @@ const mappingSchemaValidation: { [key: string]: z.ZodSchema } = {
 
 function authInputValidation(req: Request, res: Response, next: NextFunction) {
     const url = req.url.replace("/", "");
-    console.log(url, mappingSchemaValidation[url])
     const currentSchema = mappingSchemaValidation[url]
     const validation = currentSchema.safeParse(req.body)
     if (!validation.success) {
-        console.log(validation)
         throw new Error(ERRORS.BAD_REQUEST)
     } else {
         next()
@@ -51,7 +52,12 @@ router.post("/login", authInputValidation, (req, res, next) => {
     try {
         const { userName, password } = req.body
         const foundUser = login({ userName, password })
-        if (foundUser) return res.json({ message: "User logged in successfully" })
+        if (foundUser) {
+            console.log(process.env.SECRET)
+            const token = jwt.sign({ userName: foundUser.userName, isAdmin: true, }, process.env.SECRET as string || "secret");
+            // sign JWT token for user
+            return res.setHeader("Authorization", token).json({ message: "User logged in successfully", token })
+        }
         else throw new Error(ERRORS.UNAUTH)
 
     } catch (error) {
@@ -77,6 +83,7 @@ router.post("/register", authInputValidation, (req, res, next) => {
 router.post("/forgat-password", authInputValidation, (req, res, next) => {
     try {
         const { userName } = req.body
+
         if (userName) return res.json({ message: "password reset!" })
         else throw new Error(ERRORS.UNAUTH)
 
