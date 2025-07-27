@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 dotenv.config()
 
-interface ReqLocal extends Request {
+export interface ReqLocal extends Request {
+    requestId: string,
     userClaims: {
         isAdmin: boolean,
         userName: string

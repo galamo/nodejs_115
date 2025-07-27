@@ -3,21 +3,30 @@ import dotenv from "dotenv"
 import apiToken from "./middleware/api.token";
 import requestDuration from "./middleware/requestDuration";
 import limiter from "./middleware/rateLimiter"
-
 import authRouter from "./controllers/auth"
 import expensesRouter from "./controllers/expenses"
-
+import path from "path"
 import { ERRORS } from "./enum/httpStatus";
-import authorizationMiddleware from "./middleware/authorizationMiddleware";
+import authorizationMiddleware, { ReqLocal } from "./middleware/authorizationMiddleware";
+import logger from "./logger"
+import addRequestId from "./middleware/addRequestId";
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
 
 
 app.use(express.json())
+app.use(addRequestId)
 app.use(requestDuration)
 app.use(apiToken)
 app.use(limiter)
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get("/", (req, res, next) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+})
 
 app.get("/hc", (req, res, next) => {
     res.send("Api is Running")
@@ -28,8 +37,12 @@ app.use("/auth", authRouter)
 app.use(authorizationMiddleware) // all the routers below protected!!!
 app.use("/api/expenses", expensesRouter)
 
+
+
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    console.log(error.message)
+
+    logger.error(`${error.message} reqeustId: ${(req as ReqLocal).requestId}`)
+
     switch (error.message) {
         case ERRORS.BAD_REQUEST: {
             return res.status(400).send("Bad Request")
@@ -48,7 +61,9 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 app.listen(PORT, (err) => {
     if (err) {
         console.log(`\x1b[31m${err.message}\x1b[0m`);
+        logger.error(`Api is running on port ${PORT}!!!`)
     } else {
+        logger.info(`Api is running on port ${PORT}!!!`)
         console.log(`Api is running on port ${PORT}`)
     }
 })

@@ -81,7 +81,7 @@ router.post("/login", authInputValidation, (req, res, next) => {
         const foundUser = (0, loginHandler_1.login)({ userName, password });
         if (foundUser) {
             console.log(process.env.SECRET);
-            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true, }, process.env.SECRET || "secret");
+            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true, }, process.env.SECRET || "secret", { expiresIn: '1m' });
             // sign JWT token for user
             return res.setHeader("Authorization", token).json({ message: "User logged in successfully", token });
         }

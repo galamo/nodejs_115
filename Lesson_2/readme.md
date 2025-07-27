@@ -36,3 +36,9 @@
 6. bycrypt
 
 
+
+
+ / = client
+ /auth = authentication
+ /api/* = api dynamic routes 
+ 
