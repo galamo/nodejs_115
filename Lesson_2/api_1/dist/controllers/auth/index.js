@@ -46,9 +46,26 @@ const User = z.object({
     userName: z.email().max(30),
     password: z.string().min(4).max(20)
 });
+const UserRegister = z.object({
+    userName: z.email().max(30),
+    password: z.string().min(4).max(20),
+    age: z.number(),
+    phone: z.string()
+});
+const fp = z.object({
+    userName: z.email().max(30)
+}).strict();
 exports.users = [{ userName: "admin@gmail.com", password: "admin" }];
-function loginInputValidation(req, res, next) {
-    const validation = User.safeParse(req.body);
+const mappingSchemaValidation = {
+    login: User,
+    register: UserRegister,
+    "forgat-password": fp
+};
+function authInputValidation(req, res, next) {
+    const url = req.url.replace("/", "");
+    console.log(url, mappingSchemaValidation[url]);
+    const currentSchema = mappingSchemaValidation[url];
+    const validation = currentSchema.safeParse(req.body);
     if (!validation.success) {
         console.log(validation);
         throw new Error(httpStatus_1.ERRORS.BAD_REQUEST);
@@ -57,7 +74,7 @@ function loginInputValidation(req, res, next) {
         next();
     }
 }
-router.post("/login", loginInputValidation, (req, res, next) => {
+router.post("/login", authInputValidation, (req, res, next) => {
     try {
         const { userName, password } = req.body;
         const foundUser = (0, loginHandler_1.login)({ userName, password });
@@ -71,7 +88,31 @@ router.post("/login", loginInputValidation, (req, res, next) => {
         return next(new Error(error.message));
     }
 });
-router.post("/register", (req, res, next) => {
-    res.send("test ok");
+router.post("/register", authInputValidation, (req, res, next) => {
+    try {
+        const { userName, password, phone, age } = req.body;
+        const foundUser = (0, loginHandler_1.login)({ userName, password });
+        if (foundUser)
+            return res.json({ message: "User logged in successfully" });
+        else
+            throw new Error(httpStatus_1.ERRORS.UNAUTH);
+    }
+    catch (error) {
+        console.log(error);
+        return next(new Error(error.message));
+    }
+});
+router.post("/forgat-password", authInputValidation, (req, res, next) => {
+    try {
+        const { userName } = req.body;
+        if (userName)
+            return res.json({ message: "password reset!" });
+        else
+            throw new Error(httpStatus_1.ERRORS.UNAUTH);
+    }
+    catch (error) {
+        console.log(error);
+        return next(new Error(error.message));
+    }
 });
 exports.default = router;

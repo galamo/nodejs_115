@@ -18,3 +18,5 @@
 1. implement Register POST
 2. userName, password, phone, age
 3. implement Zod input validation middleware for register
+
+
