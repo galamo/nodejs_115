@@ -20,3 +20,11 @@
 3. implement Zod input validation middleware for register
 
 
+# Topics
+1. logger
+2. js - file
+3. async await 
+4. static files
+6. bycrypt
+
+

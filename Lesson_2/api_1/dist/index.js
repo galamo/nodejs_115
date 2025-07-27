@@ -11,6 +11,7 @@ const rateLimiter_1 = __importDefault(require("./middleware/rateLimiter"));
 const auth_1 = __importDefault(require("./controllers/auth"));
 const expenses_1 = __importDefault(require("./controllers/expenses"));
 const httpStatus_1 = require("./enum/httpStatus");
+const authorizationMiddleware_1 = __importDefault(require("./middleware/authorizationMiddleware"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
@@ -22,8 +23,8 @@ app.get("/hc", (req, res, next) => {
     res.send("Api is Running");
 });
 app.use("/auth", auth_1.default);
-// jwt.verify - complete the logic to protect this entrypoint
-app.use("/expenses", expenses_1.default);
+app.use(authorizationMiddleware_1.default); // all the routers below protected!!!
+app.use("/api/expenses", expenses_1.default);
 app.use((error, req, res, next) => {
     console.log(error.message);
     switch (error.message) {

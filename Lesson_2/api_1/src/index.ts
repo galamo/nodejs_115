@@ -8,6 +8,7 @@ import authRouter from "./controllers/auth"
 import expensesRouter from "./controllers/expenses"
 
 import { ERRORS } from "./enum/httpStatus";
+import authorizationMiddleware from "./middleware/authorizationMiddleware";
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -24,8 +25,8 @@ app.get("/hc", (req, res, next) => {
 
 app.use("/auth", authRouter)
 
-// jwt.verify - complete the logic to protect this entrypoint
-app.use("/expenses", expensesRouter)
+app.use(authorizationMiddleware) // all the routers below protected!!!
+app.use("/api/expenses", expensesRouter)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     console.log(error.message)
