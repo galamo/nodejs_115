@@ -20,6 +20,14 @@
 3. implement Zod input validation middleware for register
 
 
+
+# 27/7 
+## JWT
+### Expiration Token - 
+1. set expiration token for JWT
+2. check that the expiration is really working - get reject from the api, once expiration of 1 min passed
+
+
 # Topics
 1. logger
 2. js - file
