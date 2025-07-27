@@ -4,28 +4,27 @@ import { ERRORS } from "../../enum/httpStatus"
 import * as z from "zod";
 const router = express.Router()
 
-export type User = z.infer<typeof User>
 
 const User = z.object({
     userName: z.email().max(30),
     password: z.string().min(4).max(20)
 });
-
 const UserRegister = z.object({
     userName: z.email().max(30),
     password: z.string().min(4).max(20),
     age: z.number(),
     phone: z.string()
 });
-
 const fp = z.object({
     userName: z.email().max(30)
 }).strict()
 
 
-export const users = [{ userName: "admin@gmail.com", password: "admin" }]
+export type User = z.infer<typeof User>
+export type UserRegister = z.infer<typeof UserRegister>
 
 
+export const users: Array<Partial<UserRegister>> = [{ userName: "admin@gmail.com", password: "admin" }]
 
 const mappingSchemaValidation: { [key: string]: z.ZodSchema } = {
     login: User,
