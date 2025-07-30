@@ -46,3 +46,8 @@
 - login success ( NOTE you need to register before)
 - login failed
 
+### Ex - 2
+1. Support Testing GET /protected API
+- authorization error
+- protected success ( NOTE you need to register + login before)
+
