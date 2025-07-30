@@ -38,7 +38,11 @@
 
 
 
- / = client
- /auth = authentication
- /api/* = api dynamic routes 
- 
+
+# 30/7
+### Ex - 1
+1. Support Testing POST login API
+- input validation
+- login success ( NOTE you need to register before)
+- login failed
+
