@@ -6,16 +6,19 @@ import limiter from "./middleware/rateLimiter"
 import authRouter from "./controllers/auth"
 import expensesRouter from "./controllers/expenses"
 import govILRouter from "./controllers/govIlData"
+import uploaderRouter from "./controllers/uploader"
 import path from "path"
 import { ERRORS } from "./enum/httpStatus";
 import authorizationMiddleware, { ReqLocal } from "./middleware/authorizationMiddleware";
 import logger from "./logger"
 import addRequestId from "./middleware/addRequestId";
+import cors from "cors"
+
 dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000
 
-
+app.use(cors())
 app.use(express.json())
 app.use(addRequestId)
 app.use(requestDuration)
@@ -35,7 +38,7 @@ app.get("/hc", (req, res, next) => {
 
 app.use("/auth", authRouter)
 app.use("/gov-il-data", govILRouter)
-
+app.use("/uploader", uploaderRouter)
 app.use(authorizationMiddleware) // all the routers below protected!!!
 app.use("/api/expenses", expensesRouter)
 

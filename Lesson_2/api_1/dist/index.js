@@ -11,14 +11,17 @@ const rateLimiter_1 = __importDefault(require("./middleware/rateLimiter"));
 const auth_1 = __importDefault(require("./controllers/auth"));
 const expenses_1 = __importDefault(require("./controllers/expenses"));
 const govIlData_1 = __importDefault(require("./controllers/govIlData"));
+const uploader_1 = __importDefault(require("./controllers/uploader"));
 const path_1 = __importDefault(require("path"));
 const httpStatus_1 = require("./enum/httpStatus");
 const authorizationMiddleware_1 = __importDefault(require("./middleware/authorizationMiddleware"));
 const logger_1 = __importDefault(require("./logger"));
 const addRequestId_1 = __importDefault(require("./middleware/addRequestId"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(addRequestId_1.default);
 app.use(requestDuration_1.default);
@@ -33,6 +36,7 @@ app.get("/hc", (req, res, next) => {
 });
 app.use("/auth", auth_1.default);
 app.use("/gov-il-data", govIlData_1.default);
+app.use("/uploader", uploader_1.default);
 app.use(authorizationMiddleware_1.default); // all the routers below protected!!!
 app.use("/api/expenses", expenses_1.default);
 app.use((error, req, res, next) => {

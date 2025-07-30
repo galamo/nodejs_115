@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload with Fetch</title>
+</head>
+
+<body>
+    <h1>Upload a File</h1>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const res = await fetch('http://localhost:3000/uploader', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await res.json();
+                const responseEl = document.getElementById('response');
+
+                if (res.ok) {
+                    responseEl.textContent = `✅ ${data.message}: ${data.file.originalname}`;
+                } else {
+                    responseEl.textContent = `❌ Upload failed: ${data.message || res.statusText}`;
+                }
+            } catch (err) {
+                document.getElementById('response').textContent = `❌ Error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
