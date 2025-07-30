@@ -54,9 +54,6 @@ describe("Test Register API POST /register", () => {
     });
 })
 
-describe("Test Login API POST /Login", () => {
-
-})
 
 
 
