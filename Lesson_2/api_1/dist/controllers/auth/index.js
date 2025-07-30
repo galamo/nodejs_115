@@ -43,6 +43,7 @@ const httpStatus_1 = require("../../enum/httpStatus");
 const z = __importStar(require("zod"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const registrationHandler_1 = require("./registrationHandler");
 dotenv_1.default.config();
 const router = express_1.default.Router();
 const User = z.object({
@@ -96,11 +97,12 @@ router.post("/login", authInputValidation, (req, res, next) => {
 router.post("/register", authInputValidation, (req, res, next) => {
     try {
         const { userName, password, phone, age } = req.body;
-        const foundUser = (0, loginHandler_1.login)({ userName, password });
-        if (foundUser)
-            return res.json({ message: "User logged in successfully" });
+        const result = (0, registrationHandler_1.register)({ userName, password, phone, age });
+        if (result)
+            return res.json({ message: "User Registered in successfully" });
+        // else return res.json({ message: "User Registered in successfully" })
         else
-            throw new Error(httpStatus_1.ERRORS.UNAUTH);
+            throw new Error("user already exist");
     }
     catch (error) {
         console.log(error);
@@ -119,5 +121,11 @@ router.post("/forgat-password", authInputValidation, (req, res, next) => {
         console.log(error);
         return next(new Error(error.message));
     }
+});
+// THIS IS NOT PRODUCTION FUNCTION ONLY FOR TESTING
+router.delete("/clean", (req, res, next) => {
+    exports.users = [];
+    console.log("DELETED ", exports.users);
+    res.send("deleted");
 });
 exports.default = router;

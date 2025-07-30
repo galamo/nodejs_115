@@ -10,6 +10,7 @@ const requestDuration_1 = __importDefault(require("./middleware/requestDuration"
 const rateLimiter_1 = __importDefault(require("./middleware/rateLimiter"));
 const auth_1 = __importDefault(require("./controllers/auth"));
 const expenses_1 = __importDefault(require("./controllers/expenses"));
+const govIlData_1 = __importDefault(require("./controllers/govIlData"));
 const path_1 = __importDefault(require("path"));
 const httpStatus_1 = require("./enum/httpStatus");
 const authorizationMiddleware_1 = __importDefault(require("./middleware/authorizationMiddleware"));
@@ -31,6 +32,7 @@ app.get("/hc", (req, res, next) => {
     res.send("Api is Running");
 });
 app.use("/auth", auth_1.default);
+app.use("/gov-il-data", govIlData_1.default);
 app.use(authorizationMiddleware_1.default); // all the routers below protected!!!
 app.use("/api/expenses", expenses_1.default);
 app.use((error, req, res, next) => {

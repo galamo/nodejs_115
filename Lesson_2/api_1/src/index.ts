@@ -5,6 +5,7 @@ import requestDuration from "./middleware/requestDuration";
 import limiter from "./middleware/rateLimiter"
 import authRouter from "./controllers/auth"
 import expensesRouter from "./controllers/expenses"
+import govILRouter from "./controllers/govIlData"
 import path from "path"
 import { ERRORS } from "./enum/httpStatus";
 import authorizationMiddleware, { ReqLocal } from "./middleware/authorizationMiddleware";
@@ -33,6 +34,7 @@ app.get("/hc", (req, res, next) => {
 })
 
 app.use("/auth", authRouter)
+app.use("/gov-il-data", govILRouter)
 
 app.use(authorizationMiddleware) // all the routers below protected!!!
 app.use("/api/expenses", expensesRouter)

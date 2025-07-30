@@ -9,25 +9,30 @@
         "dev": "nodemon ./dist/index.js",
         "all": "concurrently --names \"TSCompiler,Node_js_API\" --prefix-colors \"red,green\" \"npm run compile\" \"npm run dev\"",
         "___________2": "FOR PRODUCTION",
-        "start": "node ./dist/index.js"
+        "start": "node ./dist/index.js",
+        "test": "mocha"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/axios": "^0.14.4",
         "@types/dotenv": "^8.2.3",
         "@types/express": "^5.0.3",
         "@types/jsonwebtoken": "^9.0.10",
+        "chai": "^5.2.1",
         "concurrently": "^9.2.0",
         "nodemon": "^3.1.10",
         "typescript": "^5.8.3"
     },
     "dependencies": {
+        "axios": "^1.11.0",
         "dotenv": "^17.2.0",
         "express": "^5.1.0",
         "express-rate-limit": "^8.0.1",
         "i": "^0.3.7",
         "jsonwebtoken": "^9.0.2",
+        "mocha": "^11.7.1",
         "npm": "^11.5.1",
         "uuid": "^11.1.0",
         "winston": "^3.17.0",

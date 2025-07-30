@@ -4,6 +4,7 @@ import { ERRORS } from "../../enum/httpStatus"
 import * as z from "zod";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import { register } from "./registrationHandler";
 dotenv.config()
 const router = express.Router()
 
@@ -27,7 +28,7 @@ export type User = z.infer<typeof User>
 export type UserRegister = z.infer<typeof UserRegister>
 
 
-export const users: Array<Partial<UserRegister>> = [{ userName: "admin@gmail.com", password: "admin" }]
+export let users: Array<Partial<UserRegister>> = [{ userName: "admin@gmail.com", password: "admin" }]
 
 const mappingSchemaValidation: { [key: string]: z.ZodSchema } = {
     login: User,
@@ -70,9 +71,11 @@ router.post("/login", authInputValidation, (req, res, next) => {
 router.post("/register", authInputValidation, (req, res, next) => {
     try {
         const { userName, password, phone, age } = req.body
-        const foundUser = login({ userName, password })
-        if (foundUser) return res.json({ message: "User logged in successfully" })
-        else throw new Error(ERRORS.UNAUTH)
+        const result = register({ userName, password, phone, age })
+        if (result) return res.json({ message: "User Registered in successfully" })
+        // else return res.json({ message: "User Registered in successfully" })
+        else throw new Error("user already exist")
+
 
     } catch (error) {
         console.log(error)
@@ -92,6 +95,13 @@ router.post("/forgat-password", authInputValidation, (req, res, next) => {
         console.log(error)
         return next(new Error((error as Error).message))
     }
+})
+
+// THIS IS NOT PRODUCTION FUNCTION ONLY FOR TESTING
+router.delete("/clean", (req, res, next) => {
+    users = [];
+    console.log("DELETED ", users)
+    res.send("deleted")
 })
 
 
