@@ -5,7 +5,8 @@ const axios = require("axios")
 const URL = "http://localhost:3000/auth/"
 
 describe("Test Register API POST /register", () => {
-    it("register is completed", async () => {
+    it("register is completed", async function () {
+
         const result = await axios.post(URL + "register", {
             "userName": "Bart11@gmail.com",
             "age": 20,
