@@ -27,9 +27,9 @@ app.use(addRequestId_1.default);
 app.use(requestDuration_1.default);
 app.use(api_token_1.default);
 app.use(rateLimiter_1.default);
-app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.get("/", (req, res, next) => {
-    res.sendFile(path_1.default.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path_1.default.join(__dirname, "public", "index.html"));
 });
 app.get("/hc", (req, res, next) => {
     res.send("Api is Running");
@@ -49,7 +49,9 @@ app.use((error, req, res, next) => {
             return res.status(401).send("Unauthorized___");
         }
         default: {
-            return res.status(500).send("Something went wrong Yam is working to fix it & flight to America");
+            return res
+                .status(500)
+                .send("Something went wrong Yam is working to fix it & flight to America");
         }
     }
 });
