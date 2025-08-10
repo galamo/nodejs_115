@@ -68,17 +68,17 @@ router.post("/login", authInputValidation, (req, res, next) => {
     }
 })
 
-router.post("/register", authInputValidation, (req, res, next) => {
+router.post("/register", authInputValidation, async (req, res, next) => {
     try {
         const { userName, password, phone, age } = req.body
-        const result = register({ userName, password, phone, age })
-        if (result) return res.json({ message: "User Registered in successfully" })
-        // else return res.json({ message: "User Registered in successfully" })
+        const result = await register({ userName, password, phone, age })
+        if (result) {
+            return res.json({ message: "User Registered in successfully" })
+        }
         else throw new Error("user already exist")
+    } catch (error: any) {
 
-
-    } catch (error) {
-        console.log(error)
+        console.log(error.message)
         return next(new Error((error as Error).message))
     }
 })

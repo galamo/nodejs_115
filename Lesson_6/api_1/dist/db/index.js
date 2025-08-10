@@ -12,21 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = register;
-const db_1 = __importDefault(require("../../db"));
-// INSERT INTO`northwind`.`users`(`email`, `password`, `age`, `address`) VALUES('nerya@gmail.com', 'test1122', '25', 'eilat');
-function register(user) {
+const promise_1 = __importDefault(require("mysql2/promise"));
+function getConnection() {
     return __awaiter(this, void 0, void 0, function* () {
-        const params = [user.userName, user.password, user.age, user.phone];
-        const result = yield (yield (0, db_1.default)()).execute(getRegisterQuery(), params);
-        console.log(result);
-        // @ts-ignore 
-        if (result[0].insertId)
-            return true;
-        else
-            return false;
+        try {
+            const connection = yield promise_1.default.createConnection({
+                host: process.env.HOST,
+                user: process.env.USER,
+                password: process.env.PASSWORD,
+                database: process.env.DATABASE,
+                port: Number(process.env.DB_PORT) || 3306
+            });
+            return connection;
+        }
+        catch (error) {
+            throw error;
+        }
     });
 }
-const getRegisterQuery = () => {
-    return `INSERT INTO northwind.users (email, password, age, address) VALUES (?,?,?,?);`;
-};
+exports.default = getConnection;

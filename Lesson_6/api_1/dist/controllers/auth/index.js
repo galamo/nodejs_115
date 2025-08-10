@@ -32,6 +32,15 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -94,21 +103,21 @@ router.post("/login", authInputValidation, (req, res, next) => {
         return next(new Error(error.message));
     }
 });
-router.post("/register", authInputValidation, (req, res, next) => {
+router.post("/register", authInputValidation, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userName, password, phone, age } = req.body;
-        const result = (0, registrationHandler_1.register)({ userName, password, phone, age });
-        if (result)
+        const result = yield (0, registrationHandler_1.register)({ userName, password, phone, age });
+        if (result) {
             return res.json({ message: "User Registered in successfully" });
-        // else return res.json({ message: "User Registered in successfully" })
+        }
         else
             throw new Error("user already exist");
     }
     catch (error) {
-        console.log(error);
+        console.log(error.message);
         return next(new Error(error.message));
     }
-});
+}));
 router.post("/forgat-password", authInputValidation, (req, res, next) => {
     try {
         const { userName } = req.body;

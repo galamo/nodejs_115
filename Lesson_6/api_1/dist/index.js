@@ -18,6 +18,10 @@ const authorizationMiddleware_1 = __importDefault(require("./middleware/authoriz
 const logger_1 = __importDefault(require("./logger"));
 const addRequestId_1 = __importDefault(require("./middleware/addRequestId"));
 const cors_1 = __importDefault(require("cors"));
+// setTimeout(async () => {
+//     const result = await (await getConnection()).query("select * from customers")
+//     console.log(result)
+// }, 5000);
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
