@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Dashboard</title>
+    <script src="./index.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #1abc9c;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .cards {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            flex: 1;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #ecf0f1;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            .cards {
+                flex-direction: column;
+            }
+
+            nav a {
+                margin-left: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Expense Dashboard</h1>
+        <nav>
+            <a href="#">Expenses</a>
+            <a href="#">Reports</a>
+            <a href="#">Admin Page</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card">
+                <h3>Total Expenses This Month</h3>
+                <p>$4,280.00</p>
+            </div>
+            <div class="card">
+                <h3>Top Spending Category</h3>
+                <p>Travel ($1,500.00)</p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2025-07-15</td>
+                    <td>Travel</td>
+                    <td>Flight to NYC</td>
+                    <td>$500.00</td>
+                </tr>
+                <tr>
+                    <td>2025-07-12</td>
+                    <td>Food</td>
+                    <td>Team lunch</td>
+                    <td>$230.00</td>
+                </tr>
+                <tr>
+                    <td>2025-07-10</td>
+                    <td>Office Supplies</td>
+                    <td>Printer ink and paper</td>
+                    <td>$120.00</td>
+                </tr>
+                <tr>
+                    <td>2025-07-09</td>
+                    <td>Travel</td>
+                    <td>Hotel stay</td>
+                    <td>$1,000.00</td>
+                </tr>
+                <tr>
+                    <td>2025-07-05</td>
+                    <td>Software</td>
+                    <td>New project licenses</td>
+                    <td>$2,430.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
