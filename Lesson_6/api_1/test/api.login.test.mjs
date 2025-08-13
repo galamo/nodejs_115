@@ -8,9 +8,9 @@ dotenv.config()
 // const axios = require("axios");
 
 const URL = "http://localhost:3000/auth/";
+
 let connection;
 before(async function () {
-
     try {
         connection = await mysql2.createConnection({
             host: process.env.HOST,
@@ -19,13 +19,12 @@ before(async function () {
             database: process.env.DATABASE,
             port: Number(process.env.DB_PORT) || 3306
         })
-        return connection
+
+
 
     } catch (error) {
         throw error;
     }
-
-
 })
 
 describe("Test Login API POST /Login", () => {
@@ -51,12 +50,22 @@ describe("Test Login API POST /Login", () => {
         }
     });
     it("login - success authenticating user", async () => {
-        console.log(result2)
+        const password = "not_relevant"
+        const dummyRandomUserName = `dummy${Math.ceil(Math.random() * 999)}@gmail.com`
+        const getInsertQuery = () => {
+            return `INSERT INTO northwind.users (email, password) VALUES (?,?);`
+        }
+        const queryResult = await connection.execute(getInsertQuery(), [dummyRandomUserName, password])
+        const idToDelete = queryResult[0].insertId
         const result = await axios.post(URL + "login", {
-            password: "1112212",
-            userName: "yam@gmail.com",
+            password,
+            userName: dummyRandomUserName,
         });
         expect(result.status).equal(200);
+        const getDeleteQuery = () => {
+            return `DELETE FROM users WHERE id = ?`
+        }
+        await connection.execute(getDeleteQuery(), [idToDelete])
     });
 
 });
