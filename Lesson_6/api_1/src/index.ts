@@ -46,8 +46,8 @@ app.get("/hc", (req, res, next) => {
 app.use("/auth", authRouter);
 app.use("/gov-il-data", govILRouter);
 app.use("/uploader", uploaderRouter);
-app.use(authorizationMiddleware); // all the routers below protected!!!
 app.use("/api/expenses", expensesRouter);
+app.use(authorizationMiddleware); // all the routers below protected!!!
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     logger.error(`${error.message} reqeustId: ${(req as ReqLocal).requestId}`);
