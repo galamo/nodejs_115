@@ -1,8 +1,14 @@
 import { User, users } from "."
-export function login(user: User): Partial<User> | undefined {
-    const toLowerUserName = user.userName?.toLowerCase()
-    const foundUser = users.find(u => u.userName === toLowerUserName && u.password === user.password)
-    return foundUser;
+import getConnection from "../../db"
+
+export async function login(user: User): any {
+    const params = [user.userName, user.password]
+    const query = getLoginQuery()
+    const result = await ((await getConnection()).execute(query, params))
+    console.log(result)
+    return result[0] && result[0][0]
 }
 
-// this function will query DB
+const getLoginQuery = () => {
+    return 'SELECT * FROM users WHERE email = ? AND password = ?';
+}

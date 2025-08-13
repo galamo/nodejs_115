@@ -41,6 +41,7 @@ function authInputValidation(req: Request, res: Response, next: NextFunction) {
     const currentSchema = mappingSchemaValidation[url]
     const validation = currentSchema.safeParse(req.body)
     if (!validation.success) {
+        console.log(validation.error)
         throw new Error(ERRORS.BAD_REQUEST)
     } else {
         next()
@@ -49,15 +50,20 @@ function authInputValidation(req: Request, res: Response, next: NextFunction) {
 
 
 
-router.post("/login", authInputValidation, (req, res, next) => {
+router.post("/login", authInputValidation, async (req, res, next) => {
     try {
         const { userName, password } = req.body
-        const foundUser = login({ userName, password })
+        console.log("====================================")
+        console.log("====================================")
+        console.log("====================================")
+        const foundUser = await login({ userName, password })
+        console.log("====================================")
+        console.log("====================================")
+        console.log("====================================")
+        console.log(foundUser)
         if (foundUser) {
-            console.log(process.env.SECRET)
             const token = jwt.sign({ userName: foundUser.userName, isAdmin: true, }, process.env.SECRET as string || "secret", { expiresIn: '1m' }
             );
-            // sign JWT token for user
             return res.setHeader("Authorization", token).json({ message: "User logged in successfully", token })
         }
         else throw new Error(ERRORS.UNAUTH)

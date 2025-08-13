@@ -17,6 +17,26 @@ describe("Test Login API POST /Login", () => {
             expect(error.status).equal(400);
         }
     });
+    it("login - failed authenticating user", async () => {
+        try {
+            const result = await axios.post(URL + "login", {
+                password: "password_not_exist",
+                userName: "email_not_exist@gmail.com",
+            });
+            throw new Error({ status: 500 });
+        } catch (error) {
+            expect(error.status).equal(401);
+        }
+    });
+    it("login - success authenticating user", async () => {
+        // not finished yet!
+        const result = await axios.post(URL + "login", {
+            password: "1112212",
+            userName: "yam@gmail.com",
+        });
+        expect(result.status).equal(200);
+    });
+
 });
 
 
