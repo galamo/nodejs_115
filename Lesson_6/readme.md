@@ -21,3 +21,11 @@
 # EX
 
 1. Create Test Util which deletes an Expense with only recieving input ID.
+2. Replace between rows
+
+```javascript
+app.use("/api/expenses", expensesRouter);
+app.use(authorizationMiddleware); // all the routers below protected!!!
+```
+
+and try to run the tests, whats wrong? how should it be fixed?
