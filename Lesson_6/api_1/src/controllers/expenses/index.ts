@@ -78,7 +78,7 @@ router.get("/", async (req, res, next) => {
     const conn = await getConnection();
     const getExpensesBetweenDates = `SELECT *
             FROM northwind.expenses
-            ORDER BY date ASC`;
+            ORDER BY date DESC`;
 
     const [rows] = await conn.execute(getExpensesBetweenDates, []);
 
@@ -113,7 +113,7 @@ router.get("/reset", async (req, res, next) => {
   res.json({ expensesLastWeek });
 });
 
-router.get("/expenses", async (req, res, next) => {
+router.get("/dates", async (req, res, next) => {
   try {
     const from = req.query.from as string;
     const to = req.query.to as string;

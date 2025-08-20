@@ -42,7 +42,7 @@ describe("Test Login API POST /Login", () => {
       category,
       description,
     ]);
-    const res = await axios.get(`${BASE_URL}/`, {
+    const res = await axios.get(`${BASE_URL}/dates`, {
       params: {
         from: dateMonthsAgo(2),
         to: dateMonthsAgo(0),
@@ -51,37 +51,66 @@ describe("Test Login API POST /Login", () => {
     expect(res.status).to.equal(200);
     expect(res.data.data).to.be.an("array");
     expect(res.data.data.length).to.be.greaterThan(0);
+    // expect(res.data.data[0].id).to.be.equal(result.insertId);
+    const ids = res.data.data.map((e) => e.id);
+    const isIdIncluded = ids.includes(result.insertId);
+    expect(isIdIncluded).to.be.equal(true);
 
     const sqlCleanup = `DELETE FROM northwind.expenses where id = ?`;
-    await await dbConnection.execute(sqlCleanup, [result.insertId.toString()]);
+    await dbConnection.execute(sqlCleanup, [result.insertId]);
   });
 
-  //   it("POST /expenses/expenses - insert new expenes", async () => {
-  //     const randomAmount = parseFloat(
-  //       (Math.random() * (999 - 10) + 10).toFixed(2)
-  //     );
-  //     const newExpense = {
-  //       amount: randomAmount,
-  //       category: "TestCategory",
-  //       date: "2025-08-15",
-  //       description: "Test expense entry",
-  //     };
+  it("GET /expenses/dates - not found expense between dates", async () => {
+    const sql = `
+      INSERT INTO expenses (amount, date, category, description)
+      VALUES (?, ?, ?, ?)
+    `;
+    const amount = (Math.random() * 500).toFixed(2); // random 0 - 500
+    const expenseDate = dateMonthsAgo(1);
+    const category = `Office Supplies ${Date.now()}`;
+    const description = `Dummy expense ${Date.now()}`;
 
-  //     const res = await axios.post(`${BASE_URL}/expenses`, newExpense);
+    const [result] = await dbConnection.execute(sql, [
+      amount,
+      expenseDate,
+      category,
+      description,
+    ]);
+    const d1 = dateMonthsAgo(10);
+    const d2 = dateMonthsAgo(8);
+    const res = await axios.get(`${BASE_URL}/dates`, {
+      params: {
+        from: d1,
+        to: d2,
+      },
+    });
+    expect(res.status).to.equal(200);
+    expect(res.data.data).to.be.an("array");
+    expect(res.data.data.length).to.be.equal(0);
 
-  //     expect(res.status).to.equal(201);
-  //     expect(res.data).to.have.property("id");
-  //     const insertedId = res.data.id;
-  //     console.log(
-  //       `[Expenses] Inserted new row, ID: ${insertedId}, amount:${randomAmount}`
-  //     );
-  //     const [rows] = await dbConnection.execute(
-  //       `SELECT * FROM northwind.expenses WHERE id = ?`,
-  //       [insertedId]
-  //     );
+    const sqlCleanup = `DELETE FROM northwind.expenses where id = ?`;
+    await dbConnection.execute(sqlCleanup, [result.insertId.toString()]);
+  });
 
-  //     expect(rows).to.have.lengthOf(1);
-  //   });
+  it("POST /expenses/expenses - insert new expenes", async () => {
+    const randomAmount = parseFloat(
+      (Math.random() * (999 - 10) + 10).toFixed(2)
+    );
+    const newExpense = {
+      amount: randomAmount,
+      category: "TestCategory",
+      date: dateMonthsAgo(0),
+      description: "Test expense entry",
+    };
+
+    const res = await axios.post(`${BASE_URL}/expenses`, newExpense);
+
+    expect(res.status).to.equal(201);
+    expect(res.data).to.have.property("id");
+    const insertedId = res.data.id;
+    const sqlCleanup = `DELETE FROM northwind.expenses where id = ?`;
+    await dbConnection.execute(sqlCleanup, [insertedId]);
+  });
 });
 
 function randomDateBetweenTwoAndOneMonthAgo() {

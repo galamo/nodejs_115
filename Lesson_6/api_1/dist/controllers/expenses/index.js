@@ -89,7 +89,7 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const conn = yield (0, db_1.default)();
         const getExpensesBetweenDates = `SELECT *
             FROM northwind.expenses
-            ORDER BY date ASC`;
+            ORDER BY date DESC`;
         const [rows] = yield conn.execute(getExpensesBetweenDates, []);
         return res.json({ data: rows });
     }
@@ -120,7 +120,7 @@ router.get("/reset", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     res.json({ expensesLastWeek });
 }));
-router.get("/expenses", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const from = req.query.from;
         const to = req.query.to;
