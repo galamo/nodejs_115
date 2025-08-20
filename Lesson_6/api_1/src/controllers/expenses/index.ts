@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import getConnection from "../../db";
+import getCategories from "./getCategories";
 
 dotenv.config();
 const router = express.Router();
@@ -20,6 +21,17 @@ router.get("/", async (req, res, next) => {
     const [rows] = await conn.execute(getExpensesBetweenDates, []);
 
     return res.json({ data: rows });
+  } catch (error) {
+    res.json({ message: `there was an error ${error}` });
+    return res.status(500).json({ message: "Expenses Error" });
+  }
+});
+
+router.get("/categories", async (req, res, next) => {
+  try {
+    const result = await getCategories();
+
+    return res.json({ data: result });
   } catch (error) {
     res.json({ message: `there was an error ${error}` });
     return res.status(500).json({ message: "Expenses Error" });

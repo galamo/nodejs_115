@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("../../db"));
+const getCategories_1 = __importDefault(require("./getCategories"));
 dotenv_1.default.config();
 const router = express_1.default.Router();
 const insertExpenses = `
@@ -29,6 +30,16 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             ORDER BY date DESC`;
         const [rows] = yield conn.execute(getExpensesBetweenDates, []);
         return res.json({ data: rows });
+    }
+    catch (error) {
+        res.json({ message: `there was an error ${error}` });
+        return res.status(500).json({ message: "Expenses Error" });
+    }
+}));
+router.get("/categories", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, getCategories_1.default)();
+        return res.json({ data: result });
     }
     catch (error) {
         res.json({ message: `there was an error ${error}` });
