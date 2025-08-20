@@ -2,10 +2,24 @@ import { expect } from "chai";
 import axios from "axios";
 import mysql2 from "mysql2/promise";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 dotenv.config();
 
 const BASE_URL = "http://localhost:3000/api/expenses";
-let testUserID;
+
+const axiosInstanceApi = axios.create({
+  baseURL: BASE_URL,
+});
+
+axiosInstanceApi.interceptors.request.use((config) => {
+  const token = createToken();
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = token; // or `Bearer ${token}` if your API expects it
+  }
+  return config;
+});
+
 let dbConnection;
 
 describe("Test Login API POST /Login", () => {
@@ -42,7 +56,7 @@ describe("Test Login API POST /Login", () => {
       category,
       description,
     ]);
-    const res = await axios.get(`${BASE_URL}/dates`, {
+    const res = await axiosInstanceApi.get(`${BASE_URL}/dates`, {
       params: {
         from: dateMonthsAgo(2),
         to: dateMonthsAgo(0),
@@ -139,4 +153,12 @@ function dateMonthsAgo(monthsAgo) {
   const mysqlDatetime = past.toISOString().slice(0, 19).replace("T", " ");
 
   return mysqlDatetime;
+}
+
+function createToken() {
+  return jwt.sign(
+    { userName: "foundUser.userName", isAdmin: true },
+    process.env.SECRET || "secret",
+    { expiresIn: "1m" }
+  );
 }
