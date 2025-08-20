@@ -6,6 +6,16 @@ DROP SCHEMA IF EXISTS `northwind` ;
 CREATE SCHEMA IF NOT EXISTS `northwind` DEFAULT CHARACTER SET latin1 ;
 USE `northwind` ;
 
+
+CREATE TABLE IF NOT EXISTS `northwind`.`expenses` (
+  id INT NOT NULL AUTO_INCREMENT,
+  amount DECIMAL(10,2) NOT NULL,
+  date DATETIME NOT NULL,
+  category VARCHAR(45) NOT NULL,
+  description VARCHAR(45) NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX id_UNIQUE (id ASC)
+);
 -- -----------------------------------------------------
 -- Table `northwind`.`customers`
 -- -----------------------------------------------------
