@@ -29,3 +29,29 @@ app.use(authorizationMiddleware); // all the routers below protected!!!
 ```
 
 and try to run the tests, whats wrong? how should it be fixed?
+
+3. create 2 entry potins
+
+- first one will return all the relevant expenses distinct
+
+```sql
+SELECT DISTINCT
+    (category)
+FROM
+    northwind.expenses;
+```
+
+- second request should return aggregated expenses amount by category
+
+```sql
+
+SELECT
+category, SUM(amount) AS total_amount
+FROM
+northwind.expenses
+GROUP BY category
+HAVING total_amount > 1000
+ORDER BY total_amount DESC
+
+
+```

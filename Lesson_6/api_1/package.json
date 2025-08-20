@@ -10,7 +10,8 @@
     "all": "concurrently --names \"TSCompiler,Node_js_API\" --prefix-colors \"red,green\" \"npm run compile\" \"npm run dev\"",
     "___________2": "FOR PRODUCTION",
     "start": "node ./dist/index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "seed": "node ./seed/seed.js"
   },
   "keywords": [],
   "author": "",
