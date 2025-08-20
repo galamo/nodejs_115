@@ -12,7 +12,7 @@ const axiosInstanceApi = axios.create({
 });
 
 axiosInstanceApi.interceptors.request.use((config) => {
-  const token = createToken();
+  const token = "createToken()";
   if (token) {
     config.headers = config.headers || {};
     config.headers.Authorization = token; // or `Bearer ${token}` if your API expects it
