@@ -13,7 +13,7 @@ function authorizationMiddleware(req, res, next) {
     if (token) {
         jsonwebtoken_1.default.verify(token, process.env.SECRET, function (err, data) {
             if (err)
-                return next(new Error("Error JWT"));
+                return next(new Error("UNAUTH"));
             else {
                 const { isAdmin, userName } = data;
                 req.userClaims = { isAdmin, userName };
@@ -22,6 +22,6 @@ function authorizationMiddleware(req, res, next) {
         });
     }
     else {
-        return next(new Error("Error JWT"));
+        return next(new Error("UNAUTH"));
     }
 }
