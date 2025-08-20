@@ -69,17 +69,6 @@ const expensesLastWeek = [
         description: "Morning coffee",
     },
 ];
-const createExpensesTable = () => {
-    return `CREATE TABLE northwind.expenses (
-  id INT NOT NULL AUTO_INCREMENT,
-  amount DECIMAL(10,2) NOT NULL,
-  date DATETIME NOT NULL,
-  category VARCHAR(45) NOT NULL,
-  description VARCHAR(45) NULL,
-  PRIMARY KEY (id),
-  UNIQUE INDEX id_UNIQUE (id ASC)
-);`;
-};
 const insertExpenses = `
         INSERT INTO northwind.expenses (id, date, category, amount, description)
         VALUES (?, ?, ?, ?, ?)
@@ -97,28 +86,6 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         res.json({ message: `there was an error ${error}` });
         return res.status(500).json({ message: "Expenses Error" });
     }
-}));
-router.get("/reset", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const conn = yield (0, db_1.default)();
-        yield conn.execute("DROP TABLE IF EXISTS northwind.expenses");
-        yield conn.execute(createExpensesTable(), []);
-        // const result = await (await getConnection()).execute(createExpensesTable(), []);
-        for (const exp of expensesLastWeek) {
-            yield conn.execute(insertExpenses, [
-                exp.id,
-                exp.date,
-                exp.category,
-                exp.amount,
-                exp.description,
-            ]);
-        }
-        res.json({ message: "expenses table reset completed!" });
-    }
-    catch (error) {
-        res.json({ message: `there was an error ${error}` });
-    }
-    res.json({ expensesLastWeek });
 }));
 router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

@@ -12,7 +12,7 @@ const axiosInstanceApi = axios.create({
 });
 
 axiosInstanceApi.interceptors.request.use((config) => {
-  const token = "createToken()";
+  const token = createToken();
   if (token) {
     config.headers = config.headers || {};
     config.headers.Authorization = token; // or `Bearer ${token}` if your API expects it
@@ -22,7 +22,7 @@ axiosInstanceApi.interceptors.request.use((config) => {
 
 let dbConnection;
 
-describe("Test Login API POST /Login", () => {
+describe("Test Expenses API", () => {
   before(async () => {
     dbConnection = await mysql2.createConnection({
       host: "localhost",
@@ -92,7 +92,7 @@ describe("Test Login API POST /Login", () => {
     ]);
     const d1 = dateMonthsAgo(10);
     const d2 = dateMonthsAgo(8);
-    const res = await axios.get(`${BASE_URL}/dates`, {
+    const res = await axiosInstanceApi.get(`${BASE_URL}/dates`, {
       params: {
         from: d1,
         to: d2,
@@ -117,7 +117,7 @@ describe("Test Login API POST /Login", () => {
       description: "Test expense entry",
     };
 
-    const res = await axios.post(`${BASE_URL}/expenses`, newExpense);
+    const res = await axiosInstanceApi.post(`${BASE_URL}/expenses`, newExpense);
 
     expect(res.status).to.equal(201);
     expect(res.data).to.have.property("id");
