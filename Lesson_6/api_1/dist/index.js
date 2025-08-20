@@ -41,8 +41,8 @@ app.get("/hc", (req, res, next) => {
 app.use("/auth", auth_1.default);
 app.use("/gov-il-data", govIlData_1.default);
 app.use("/uploader", uploader_1.default);
-app.use(authorizationMiddleware_1.default); // all the routers below protected!!!
 app.use("/api/expenses", expenses_1.default);
+app.use(authorizationMiddleware_1.default); // all the routers below protected!!!
 app.use((error, req, res, next) => {
     logger_1.default.error(`${error.message} reqeustId: ${req.requestId}`);
     switch (error.message) {
