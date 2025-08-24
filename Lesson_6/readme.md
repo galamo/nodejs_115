@@ -63,7 +63,7 @@ ORDER BY total_amount DESC
 1. Using the client application, after user perform a login
 2. page redirect to data - page
 3. change data => expenses
-4. suppport fetching the data from expenses
+4. support fetching the data from expenses
 5. remember - use seed to insert data
 6. advanced - create pie chart for the statiscs data
 7. present all the data in the same page ? new statiscs page.

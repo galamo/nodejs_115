@@ -95,7 +95,7 @@ router.post("/login", authInputValidation, (req, res, next) => __awaiter(void 0,
         const { userName, password } = req.body;
         const foundUser = yield (0, loginHandler_1.login)({ userName, password });
         if (foundUser) {
-            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true }, process.env.SECRET || "secret", { expiresIn: "1m" });
+            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true }, process.env.SECRET || "secret", { expiresIn: "5h" });
             return res
                 .setHeader("Authorization", token)
                 .json({ message: "User logged in successfully", token });
