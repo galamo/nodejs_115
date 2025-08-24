@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import getConnection from "../../db";
 import getCategories from "./getCategories";
+import { ReqLocal } from "../../middleware/authorizationMiddleware";
 
 dotenv.config();
 const router = express.Router();
@@ -12,96 +13,96 @@ const insertExpenses = `
     `;
 
 router.get("/", async (req, res, next) => {
-  try {
-    const conn = await getConnection();
-    const getExpensesBetweenDates = `SELECT *
+    try {
+        const conn = await getConnection();
+        const getExpensesBetweenDates = `SELECT *
             FROM northwind.expenses
             ORDER BY date DESC`;
 
-    const [rows] = await conn.execute(getExpensesBetweenDates, []);
+        const [rows] = await conn.execute(getExpensesBetweenDates, []);
 
-    return res.json({ data: rows });
-  } catch (error) {
-    res.json({ message: `there was an error ${error}` });
-    return res.status(500).json({ message: "Expenses Error" });
-  }
+        return res.json({ data: rows });
+    } catch (error) {
+        res.json({ message: `there was an error ${error}` });
+        return res.status(500).json({ message: "Expenses Error" });
+    }
 });
 
 router.get("/categories", async (req, res, next) => {
-  try {
-    const result = await getCategories();
+    try {
+        const result = await getCategories();
 
-    return res.json({ data: result });
-  } catch (error) {
-    res.json({ message: `there was an error ${error}` });
-    return res.status(500).json({ message: "Expenses Error" });
-  }
+        return res.json({ data: result });
+    } catch (error) {
+        res.json({ message: `there was an error ${error}` });
+        return res.status(500).json({ message: "Expenses Error" });
+    }
 });
 
 router.get("/dates", async (req, res, next) => {
-  try {
-    const from = req.query.from as string;
-    const to = req.query.to as string;
-    if (!from || !to) {
-      return res
-        .status(400)
-        .json({ message: "Missing 'from' or 'to' query parameters" });
-    }
+    try {
+        const from = req.query.from as string;
+        const to = req.query.to as string;
+        if (!from || !to) {
+            return res
+                .status(400)
+                .json({ message: "Missing 'from' or 'to' query parameters" });
+        }
 
-    const conn = await getConnection();
-    const getExpensesBetweenDates = `SELECT *
+        const conn = await getConnection();
+        const getExpensesBetweenDates = `SELECT *
             FROM northwind.expenses
             WHERE date BETWEEN ? AND ?
             ORDER BY date ASC`;
 
-    const [rows] = await conn.execute(getExpensesBetweenDates, [from, to]);
+        const [rows] = await conn.execute(getExpensesBetweenDates, [from, to]);
 
-    return res.json({ data: rows });
-  } catch (error) {
-    res.json({ message: `there was an error ${error}` });
-    return res.status(500).json({ message: "Expenses Error" });
-  }
+        return res.json({ data: rows });
+    } catch (error) {
+        res.json({ message: `there was an error ${error}` });
+        return res.status(500).json({ message: "Expenses Error" });
+    }
 });
 
+const permissions = {
+    "/expenses": ["admin", "configurator", "owner"]
+}
+
 router.post("/expenses", async (req, res, next) => {
-  try {
-    const { amount, category, date, description } = req.body;
-    if (!amount || !category || !date) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields: amount, category or date" });
-    }
+    try {
+        const role = (req as ReqLocal)?.userData?.role
+        if (role !== "admin") return res.status(403) // or send to error handler
+        // 1. use middleware 
+        // CONTINUE HERE!!!
+        const { amount, category, date, description } = req.body;
+        if (!amount || !category || !date) {
+            return res
+                .status(400)
+                .json({ message: "Missing required fields: amount, category or date" });
+        }
 
-    const conn = await getConnection();
-    const params = [amount, date, category, description || null];
-    const [result]: any = await conn.execute(
-      `INSERT INTO northwind.expenses (amount, date, category, description)
+        const conn = await getConnection();
+        const params = [amount, date, category, description || null];
+        const [result]: any = await conn.execute(
+            `INSERT INTO northwind.expenses (amount, date, category, description)
              VALUES (?, ?, ?, ?)`,
-      params
-    );
-    const insertedId = result.insertId;
+            params
+        );
+        const insertedId = result.insertId;
 
-    return res.status(201).json({
-      message: "Expense created successfully",
-      id: insertedId,
-    });
-  } catch (error) {
-    console.error("Failed to insert expense:", error);
-    return res.status(500).json({ message: "expenses insert error" });
-  }
+        return res.status(201).json({
+            message: "Expense created successfully",
+            id: insertedId,
+        });
+    } catch (error) {
+        console.error("Failed to insert expense:", error);
+        return res.status(500).json({ message: "expenses insert error" });
+    }
 });
 
 router.get("/sum-all-expenses", (req, res, next) => {
-  //   return res.json({ total: result });
+    //   return res.json({ total: result });
 });
-// classic use case for unit test
-// export function sumTotal(expensesArray: Array<(typeof expensesLastWeek)[0]>) {
-//   if (!expensesArray) return;
 
-//   const total = expensesArray.reduce((acc, current) => {
-//     return acc + current.amount;
-//   }, 0);
-//   return total;
-// }
 
 export default router;

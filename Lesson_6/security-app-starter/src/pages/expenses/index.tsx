@@ -31,6 +31,7 @@ export default function Expenses() {
         <section className="card">
             <div className="card-header">
                 <h2>Expenses</h2>
+                <button className="btn"> Create New Expense</button>
                 {/* <div className="filters">
           <label>From <input type="date" value={from} onChange={e => setFrom(e.target.value)} /></label>
           <label>To <input type="date" value={to} onChange={e => setTo(e.target.value)} /></label>

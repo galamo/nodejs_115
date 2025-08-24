@@ -7,9 +7,10 @@ dotenv.config();
 
 export interface ReqLocal extends Request {
     requestId: string;
-    userClaims: {
+    userData: {
         isAdmin: boolean;
         userName: string;
+        role: string
     };
 }
 
@@ -30,8 +31,8 @@ export default function authorizationMiddleware(
                     return next(new Error(ERRORS.UNAUTH));
                 }
                 else {
-                    const { isAdmin, userName } = data;
-                    (req as ReqLocal).userClaims = { isAdmin, userName };
+                    const { isAdmin, userName, role } = data;
+                    (req as ReqLocal).userData = { isAdmin, userName, role };
                     return next();
                 }
             }

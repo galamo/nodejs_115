@@ -5,6 +5,7 @@ import * as z from "zod";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { register } from "./registrationHandler";
+import { getUserRole } from "./getUserRole";
 dotenv.config();
 const router = express.Router();
 
@@ -54,8 +55,10 @@ router.post("/login", authInputValidation, async (req, res, next) => {
         const { userName, password } = req.body;
         const foundUser = await login({ userName, password });
         if (foundUser) {
+            const roleResult = await getUserRole(foundUser.id)
+
             const token = jwt.sign(
-                { userName: foundUser.userName, isAdmin: true },
+                { userName: foundUser.userName, isAdmin: roleResult?.role?.toLowerCase() === "admin", role: roleResult?.role },
                 (process.env.SECRET as string) || "secret",
                 { expiresIn: "5h" }
             );

@@ -108,6 +108,21 @@ INSERT INTO `users` VALUES (1,'admin@admin.com','1234',NULL,NULL,'2025-08-10 15:
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+CREATE TABLE `northwind`.`users_roles` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NULL,
+  `role` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `user_role_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `user_role`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `northwind`.`users` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+INSERT INTO `northwind`.`users_roles` (`user_id`, `role`) VALUES ('1', 'admin');
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

@@ -68,8 +68,17 @@ router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
+const permissions = {
+    "/expenses": ["admin", "configurator", "owner"]
+};
 router.post("/expenses", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
+        const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
+        if (role !== "admin")
+            return res.status(403); // or send to error handler
+        // 1. use middleware 
+        // CONTINUE HERE!!!
         const { amount, category, date, description } = req.body;
         if (!amount || !category || !date) {
             return res
@@ -94,12 +103,4 @@ router.post("/expenses", (req, res, next) => __awaiter(void 0, void 0, void 0, f
 router.get("/sum-all-expenses", (req, res, next) => {
     //   return res.json({ total: result });
 });
-// classic use case for unit test
-// export function sumTotal(expensesArray: Array<(typeof expensesLastWeek)[0]>) {
-//   if (!expensesArray) return;
-//   const total = expensesArray.reduce((acc, current) => {
-//     return acc + current.amount;
-//   }, 0);
-//   return total;
-// }
 exports.default = router;

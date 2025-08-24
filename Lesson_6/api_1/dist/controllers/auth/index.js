@@ -53,6 +53,7 @@ const z = __importStar(require("zod"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const registrationHandler_1 = require("./registrationHandler");
+const getUserRole_1 = require("./getUserRole");
 dotenv_1.default.config();
 const router = express_1.default.Router();
 const User = z.object({
@@ -91,11 +92,13 @@ function authInputValidation(req, res, next) {
     }
 }
 router.post("/login", authInputValidation, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { userName, password } = req.body;
         const foundUser = yield (0, loginHandler_1.login)({ userName, password });
         if (foundUser) {
-            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: true }, process.env.SECRET || "secret", { expiresIn: "5h" });
+            const roleResult = yield (0, getUserRole_1.getUserRole)(foundUser.id);
+            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: ((_a = roleResult === null || roleResult === void 0 ? void 0 : roleResult.role) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "admin", role: roleResult === null || roleResult === void 0 ? void 0 : roleResult.role }, process.env.SECRET || "secret", { expiresIn: "5h" });
             return res
                 .setHeader("Authorization", token)
                 .json({ message: "User logged in successfully", token });
