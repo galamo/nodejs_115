@@ -83,3 +83,26 @@ ORDER BY total_amount DESC
 4. use mainAxios
 5. protect the entry point - authorization
 6. create api route GET /orders , implement query with JOIN
+
+
+```sql
+SELECT 
+    northwind.orders.id AS order_id,
+    CONCAT(employees.first_name,
+            ' ',
+            employees.last_name) AS employee_full_name,
+    CONCAT(customers.first_name,
+            ' ',
+            customers.last_name) AS customer_full_name,
+    shipping_fee,
+    ship_city,
+    orders.order_date
+FROM
+    northwind.orders
+        JOIN
+    employees ON northwind.orders.employee_id = employees.id
+        JOIN
+    customers ON northwind.orders.customer_id = customers.id
+
+
+```
