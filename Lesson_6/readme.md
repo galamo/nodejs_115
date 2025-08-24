@@ -73,3 +73,13 @@ ORDER BY total_amount DESC
 1. navigate to folder security-app-starter
 2. run `npm i`
 3. run `npm run dev`
+
+
+
+# FS Flow 2
+1. Support new route client /orders 
+2. table will show the orders, employee name and customer name 
+3. show only the following information - orderId, employee full name, customer full name, shipping fee, ship city
+4. use mainAxios
+5. protect the entry point - authorization
+6. create api route GET /orders , implement query with JOIN
