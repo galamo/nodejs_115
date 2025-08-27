@@ -9,10 +9,10 @@ const router = express.Router();
 
 
 
-router.post("/details", async (req, res, next) => {
+router.get("/details", async (req, res, next) => {
     try {
-       const userId = (req as ReqLocal).userData?.userId
-       
+        const userId = (req as ReqLocal).userData?.userId
+
     } catch (error) {
 
     }
