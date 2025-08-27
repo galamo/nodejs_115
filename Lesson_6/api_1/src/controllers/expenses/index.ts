@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import getConnection from "../../db";
 import getCategories from "./getCategories";
+import { isAdminMiddleware } from "../../middleware/authorizations/isAdmin";
 import { ReqLocal } from "../../middleware/authorizationMiddleware";
 
 dotenv.config();
@@ -64,16 +65,21 @@ router.get("/dates", async (req, res, next) => {
     }
 });
 
-const permissions = {
-    "/expenses": ["admin", "configurator", "owner"]
+const rolesPerEntryMap: { [key: string]: Array<string> } = {
+    "/expenses__post": ["admin", "configurator", "owner"]
 }
 
-router.post("/expenses", async (req, res, next) => {
+export const validateAuthorization = (req: Request, res: Response, next: NextFunction) => {
+    const role = (req as ReqLocal)?.userData?.role
+    const authKey = `${req.url.toLowerCase()}__${req.method.toLowerCase()}`
+    const permittedRoles = rolesPerEntryMap[authKey]
+    if (Array.isArray(permittedRoles) && permittedRoles.includes(role)) return next()
+    else return res.status(403).send("error")
+}
+
+router.post("/expenses", validateAuthorization, async (req, res, next) => {
+    console.log(req.method, req.url)
     try {
-        const role = (req as ReqLocal)?.userData?.role
-        if (role !== "admin") return res.status(403) // or send to error handler
-        // 1. use middleware 
-        // CONTINUE HERE!!!
         const { amount, category, date, description } = req.body;
         if (!amount || !category || !date) {
             return res

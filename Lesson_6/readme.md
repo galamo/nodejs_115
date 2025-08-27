@@ -106,3 +106,7 @@ FROM
 
 
 ```
+
+# Define for /dates 
+1. the following roles - ["admin", "viewer", "owner" , "configurator"]
+2. change the test according to the new roles ( in case needed )

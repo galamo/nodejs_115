@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateAuthorization = void 0;
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("../../db"));
@@ -68,17 +69,23 @@ router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
-const permissions = {
-    "/expenses": ["admin", "configurator", "owner"]
+const rolesPerEntryMap = {
+    "/expenses__post": ["admin", "configurator", "owner"]
 };
-router.post("/expenses", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validateAuthorization = (req, res, next) => {
     var _a;
+    const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
+    const authKey = `${req.url.toLowerCase()}__${req.method.toLowerCase()}`;
+    const permittedRoles = rolesPerEntryMap[authKey];
+    if (Array.isArray(permittedRoles) && permittedRoles.includes(role))
+        return next();
+    else
+        return res.status(403).send("error");
+};
+exports.validateAuthorization = validateAuthorization;
+router.post("/expenses", exports.validateAuthorization, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.method, req.url);
     try {
-        const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
-        if (role !== "admin")
-            return res.status(403); // or send to error handler
-        // 1. use middleware 
-        // CONTINUE HERE!!!
         const { amount, category, date, description } = req.body;
         if (!amount || !category || !date) {
             return res

@@ -12,7 +12,7 @@ const axiosInstanceApi = axios.create({
 });
 
 axiosInstanceApi.interceptors.request.use((config) => {
-    const token = createToken();
+    const token = createToken("viewer");
     if (token) {
         config.headers = config.headers || {};
         config.headers.Authorization = token; // or `Bearer ${token}` if your API expects it
@@ -106,7 +106,8 @@ describe("Test Expenses API", () => {
         await dbConnection.execute(sqlCleanup, [result.insertId.toString()]);
     });
 
-    it("POST /api/expenses - insert new expenes", async () => {
+    it("POST /api/expenses - insert new expenses", async function () {
+
         const randomAmount = parseFloat(
             (Math.random() * (999 - 10) + 10).toFixed(2)
         );
@@ -116,8 +117,9 @@ describe("Test Expenses API", () => {
             date: dateMonthsAgo(0),
             description: "Test expense entry",
         };
-
-        const res = await axiosInstanceApi.post(`${BASE_URL}/expenses`, newExpense);
+        const res = await axios.post(`${BASE_URL}/expenses`, newExpense, {
+            headers: { Authorization: createToken("admin") }
+        });
 
         expect(res.status).to.equal(201);
         expect(res.data).to.have.property("id");
@@ -155,9 +157,9 @@ function dateMonthsAgo(monthsAgo) {
     return mysqlDatetime;
 }
 
-function createToken() {
+function createToken(role) {
     return jwt.sign(
-        { userName: "foundUser.userName", isAdmin: true },
+        { userName: "foundUser.userName", role, isAdmin: role === "admin" },
         process.env.SECRET || "secret",
         { expiresIn: "1m" }
     );
