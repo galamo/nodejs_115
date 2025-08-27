@@ -54,8 +54,8 @@ describe("Test User details", () => {
         expect(result.data.email).equal(dummyRandomUserName)
         expect(result.data.role).equal("admin")
 
-        //     const sqlCleanup = `DELETE FROM northwind.expenses where id = ?`;
-        //     await dbConnection.execute(sqlCleanup, [result.insertId]);
+        const sqlCleanup = `DELETE FROM northwind.users where id = ?`;
+        await dbConnection.execute(sqlCleanup, [queryResult1[0].insertId]);
     });
 
 
