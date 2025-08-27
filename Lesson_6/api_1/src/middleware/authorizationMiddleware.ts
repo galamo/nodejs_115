@@ -34,8 +34,8 @@ export default function authorizationMiddleware(
                     return next(new Error(ERRORS.UNAUTH));
                 }
                 else {
-                    const { isAdmin, userName, role } = data;
-                    (req as ReqLocal).userData = { isAdmin, userName, role };
+                    const { isAdmin, userName, role, userId } = data;
+                    (req as ReqLocal).userData = { isAdmin, userName, role, userId };
                     return next();
                 }
             }

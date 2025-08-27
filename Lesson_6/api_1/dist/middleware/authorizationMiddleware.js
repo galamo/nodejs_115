@@ -19,8 +19,8 @@ function authorizationMiddleware(req, res, next) {
                 return next(new Error(httpStatus_1.ERRORS.UNAUTH));
             }
             else {
-                const { isAdmin, userName, role } = data;
-                req.userData = { isAdmin, userName, role };
+                const { isAdmin, userName, role, userId } = data;
+                req.userData = { isAdmin, userName, role, userId };
                 return next();
             }
         });
