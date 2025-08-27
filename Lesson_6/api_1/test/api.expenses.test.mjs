@@ -106,6 +106,31 @@ describe("Test Expenses API", () => {
         await dbConnection.execute(sqlCleanup, [result.insertId.toString()]);
     });
 
+    it("GET /api/expenses/dates - role is not permitted", async () => {
+
+        try {
+            const amount = (Math.random() * 500).toFixed(2); // random 0 - 500
+            const expenseDate = dateMonthsAgo(1);
+            const category = `Office Supplies ${Date.now()}`;
+            const description = `Dummy expense ${Date.now()}`;
+
+
+            const d1 = dateMonthsAgo(10);
+            const d2 = dateMonthsAgo(8);
+            const res = await axios.get(`${BASE_URL}/dates`, {
+                params: {
+                    from: d1,
+                    to: d2,
+                }, headers: {
+                    Authorization: createToken("RoleThatNotExist")
+                }
+            });
+            expect(1).to.equal(2);
+        } catch (error) {
+            expect(error.status).equal(403);
+        }
+    });
+
     it("POST /api/expenses - insert new expenses", async function () {
 
         const randomAmount = parseFloat(

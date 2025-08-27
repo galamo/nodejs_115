@@ -13,6 +13,24 @@ const insertExpenses = `
         VALUES (?, ?, ?, ?, ?)
     `;
 
+export const validateAuthorization = (req: Request, res: Response, next: NextFunction) => {
+    const role = (req as ReqLocal)?.userData?.role
+    const authKey = `${req.url.toLowerCase().split("?")[0]}__${req.method.toLowerCase()}`
+    const permittedRoles = rolesPerEntryMap[authKey]
+    if (Array.isArray(permittedRoles) && permittedRoles.includes(role)) return next()
+    else return res.status(403).send("error")
+}
+export type roles = "admin" | "configurator" | "owner" | "viewer"
+export const validateAutMiddleware = (roles: Array<roles>) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const role = (req as ReqLocal)?.userData?.role
+        if (Array.isArray(roles) && roles.includes(role)) return next()
+        else return res.status(403).send("error")
+    }
+}
+
+
+router.use(validateAutMiddleware(["admin", "configurator", "owner", "viewer"]))
 router.get("/", async (req, res, next) => {
     try {
         const conn = await getConnection();
@@ -29,7 +47,7 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-router.get("/categories", async (req, res, next) => {
+router.get("/categories", validateAuthorization, async (req, res, next) => {
     try {
         const result = await getCategories();
 
@@ -39,6 +57,12 @@ router.get("/categories", async (req, res, next) => {
         return res.status(500).json({ message: "Expenses Error" });
     }
 });
+
+const rolesPerEntryMap: { [key: string]: Array<string> } = {
+    "/expenses__post": ["admin", "configurator", "owner"],
+    "/dates__get": ["admin", "configurator", "owner", "viewer"],
+    "/categories__get": ["configurator"]
+}
 
 router.get("/dates", async (req, res, next) => {
     try {
@@ -65,17 +89,6 @@ router.get("/dates", async (req, res, next) => {
     }
 });
 
-const rolesPerEntryMap: { [key: string]: Array<string> } = {
-    "/expenses__post": ["admin", "configurator", "owner"]
-}
-
-export const validateAuthorization = (req: Request, res: Response, next: NextFunction) => {
-    const role = (req as ReqLocal)?.userData?.role
-    const authKey = `${req.url.toLowerCase()}__${req.method.toLowerCase()}`
-    const permittedRoles = rolesPerEntryMap[authKey]
-    if (Array.isArray(permittedRoles) && permittedRoles.includes(role)) return next()
-    else return res.status(403).send("error")
-}
 
 router.post("/expenses", validateAuthorization, async (req, res, next) => {
     console.log(req.method, req.url)

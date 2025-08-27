@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import logger from "../logger";
 import { ERRORS } from "../enum/httpStatus";
+import { roles } from "../controllers/expenses";
 dotenv.config();
 
 export interface ReqLocal extends Request {
@@ -10,7 +11,7 @@ export interface ReqLocal extends Request {
     userData: {
         isAdmin: boolean;
         userName: string;
-        role: string
+        role: roles
     };
 }
 

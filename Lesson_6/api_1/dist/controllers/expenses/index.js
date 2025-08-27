@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateAuthorization = void 0;
+exports.validateAutMiddleware = exports.validateAuthorization = void 0;
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const db_1 = __importDefault(require("../../db"));
@@ -23,6 +23,29 @@ const insertExpenses = `
         INSERT INTO northwind.expenses (id, date, category, amount, description)
         VALUES (?, ?, ?, ?, ?)
     `;
+const validateAuthorization = (req, res, next) => {
+    var _a;
+    const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
+    const authKey = `${req.url.toLowerCase().split("?")[0]}__${req.method.toLowerCase()}`;
+    const permittedRoles = rolesPerEntryMap[authKey];
+    if (Array.isArray(permittedRoles) && permittedRoles.includes(role))
+        return next();
+    else
+        return res.status(403).send("error");
+};
+exports.validateAuthorization = validateAuthorization;
+const validateAutMiddleware = (roles) => {
+    return (req, res, next) => {
+        var _a;
+        const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
+        if (Array.isArray(roles) && roles.includes(role))
+            return next();
+        else
+            return res.status(403).send("error");
+    };
+};
+exports.validateAutMiddleware = validateAutMiddleware;
+router.use((0, exports.validateAutMiddleware)(["admin", "configurator", "owner", "viewer"]));
 router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const conn = yield (0, db_1.default)();
@@ -37,7 +60,7 @@ router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
-router.get("/categories", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/categories", exports.validateAuthorization, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield (0, getCategories_1.default)();
         return res.json({ data: result });
@@ -47,6 +70,11 @@ router.get("/categories", (req, res, next) => __awaiter(void 0, void 0, void 0, 
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
+const rolesPerEntryMap = {
+    "/expenses__post": ["admin", "configurator", "owner"],
+    "/dates__get": ["admin", "configurator", "owner", "viewer"],
+    "/categories__get": ["configurator"]
+};
 router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const from = req.query.from;
@@ -69,20 +97,6 @@ router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
-const rolesPerEntryMap = {
-    "/expenses__post": ["admin", "configurator", "owner"]
-};
-const validateAuthorization = (req, res, next) => {
-    var _a;
-    const role = (_a = req === null || req === void 0 ? void 0 : req.userData) === null || _a === void 0 ? void 0 : _a.role;
-    const authKey = `${req.url.toLowerCase()}__${req.method.toLowerCase()}`;
-    const permittedRoles = rolesPerEntryMap[authKey];
-    if (Array.isArray(permittedRoles) && permittedRoles.includes(role))
-        return next();
-    else
-        return res.status(403).send("error");
-};
-exports.validateAuthorization = validateAuthorization;
 router.post("/expenses", exports.validateAuthorization, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.method, req.url);
     try {
