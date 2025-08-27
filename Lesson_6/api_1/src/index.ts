@@ -5,6 +5,7 @@ import requestDuration from "./middleware/requestDuration";
 import limiter from "./middleware/rateLimiter";
 import authRouter from "./controllers/auth";
 import expensesRouter from "./controllers/expenses";
+import userRouter from "./controllers/user";
 import govILRouter from "./controllers/govIlData";
 import uploaderRouter from "./controllers/uploader";
 import path from "path";
@@ -48,6 +49,7 @@ app.use("/gov-il-data", govILRouter);
 app.use("/uploader", uploaderRouter);
 app.use(authorizationMiddleware); // all the routers below protected!!!
 app.use("/api/expenses", expensesRouter);
+app.use("/api/user", userRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   logger.error(`${error.message} reqeustId: ${(req as ReqLocal).requestId}`);

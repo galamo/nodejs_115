@@ -58,7 +58,12 @@ router.post("/login", authInputValidation, async (req, res, next) => {
             const roleResult = await getUserRole(foundUser.id)
 
             const token = jwt.sign(
-                { userName: foundUser.userName, isAdmin: roleResult?.role?.toLowerCase() === "admin", role: roleResult?.role },
+                {
+                    userName: foundUser.userName,
+                    isAdmin: roleResult?.role?.toLowerCase() === "admin",
+                    role: roleResult?.role,
+                    userId: foundUser.id
+                },
                 (process.env.SECRET as string) || "secret",
                 { expiresIn: "5h" }
             );

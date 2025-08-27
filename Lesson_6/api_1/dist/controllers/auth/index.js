@@ -98,7 +98,12 @@ router.post("/login", authInputValidation, (req, res, next) => __awaiter(void 0,
         const foundUser = yield (0, loginHandler_1.login)({ userName, password });
         if (foundUser) {
             const roleResult = yield (0, getUserRole_1.getUserRole)(foundUser.id);
-            const token = jsonwebtoken_1.default.sign({ userName: foundUser.userName, isAdmin: ((_a = roleResult === null || roleResult === void 0 ? void 0 : roleResult.role) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "admin", role: roleResult === null || roleResult === void 0 ? void 0 : roleResult.role }, process.env.SECRET || "secret", { expiresIn: "5h" });
+            const token = jsonwebtoken_1.default.sign({
+                userName: foundUser.userName,
+                isAdmin: ((_a = roleResult === null || roleResult === void 0 ? void 0 : roleResult.role) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "admin",
+                role: roleResult === null || roleResult === void 0 ? void 0 : roleResult.role,
+                userId: foundUser.id
+            }, process.env.SECRET || "secret", { expiresIn: "5h" });
             return res
                 .setHeader("Authorization", token)
                 .json({ message: "User logged in successfully", token });
