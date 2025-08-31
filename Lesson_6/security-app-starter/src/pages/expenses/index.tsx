@@ -57,7 +57,7 @@ export default function Expenses() {
       <div className="card-header">
         <h2>Expenses</h2>
         {/* support multiple roles per component  */}
-        <RolesWrapper role={"admin"}>
+        <RolesWrapper roles={["admin"]}>
           <button className="btn"> Create New Expense</button>
         </RolesWrapper>
 

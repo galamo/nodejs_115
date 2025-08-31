@@ -13,7 +13,7 @@ type RolesContextValue = {
   roles: Role[];
   isLoading: boolean;
   error: string | null;
-  hasRole: (role: Role) => boolean;
+  hasRole: (role: Array<Role>) => boolean;
 };
 
 const RolesContext = createContext<RolesContextValue | undefined>(undefined);
@@ -47,7 +47,8 @@ export const RolesProvider: React.FC<Props> = ({ children }) => {
     roles,
     isLoading,
     error,
-    hasRole: (role) => currentUserSingleRole === role,
+    hasRole: (roles) =>
+      Array.isArray(roles) && roles.includes(currentUserSingleRole),
   };
 
   return (
