@@ -1,6 +1,7 @@
 import { getUserDetailsApi } from "../../services/user.api";
 import { getExpensesByDates } from "../../services/expenses.api";
 import { useEffect, useState } from "react";
+import { RolesWrapper } from "@/components/RolesWrapper";
 
 function formatDateInput(d: Date) {
   return d.toISOString().slice(0, 10);
@@ -48,16 +49,18 @@ export default function Expenses() {
 
   useEffect(() => {
     load();
-    getUserDetails();
+    // getUserDetails();
   }, []);
 
   return (
     <section className="card">
       <div className="card-header">
         <h2>Expenses</h2>
-        {role === "admin" && (
+        {/* support multiple roles per component  */}
+        <RolesWrapper role={"admin"}>
           <button className="btn"> Create New Expense</button>
-        )}
+        </RolesWrapper>
+
         {/* <div className="filters">
           <label>From <input type="date" value={from} onChange={e => setFrom(e.target.value)} /></label>
           <label>To <input type="date" value={to} onChange={e => setTo(e.target.value)} /></label>

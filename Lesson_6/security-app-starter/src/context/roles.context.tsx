@@ -1,0 +1,62 @@
+import { getUserDetailsApi } from "@/services/user.api";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+
+type Role = string;
+
+type RolesContextValue = {
+  roles: Role[];
+  isLoading: boolean;
+  error: string | null;
+  hasRole: (role: Role) => boolean;
+};
+
+const RolesContext = createContext<RolesContextValue | undefined>(undefined);
+
+type Props = { children: ReactNode };
+
+export const RolesProvider: React.FC<Props> = ({ children }) => {
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [currentUserSingleRole, setCurrentUserSingleRole] = useState<Role>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function getUserDetails() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await getUserDetailsApi();
+        setCurrentUserSingleRole(res.role);
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    getUserDetails();
+  }, []);
+
+  const value: RolesContextValue = {
+    roles,
+    isLoading,
+    error,
+    hasRole: (role) => currentUserSingleRole === role,
+  };
+
+  return (
+    <RolesContext.Provider value={value}>{children}</RolesContext.Provider>
+  );
+};
+
+export function useRoles() {
+  const ctx = useContext(RolesContext);
+  if (!ctx) throw new Error("useRoles must be used inside <RolesProvider>");
+  return ctx;
+}
