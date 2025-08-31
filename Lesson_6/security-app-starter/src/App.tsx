@@ -6,11 +6,20 @@ import Data from "./pages/Data";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Expenses from "./pages/expenses";
 import { RolesProvider } from "./context/roles.context";
+import MainLayout from "./components/MainLayout";
 
 export default function App() {
   return (
     <div className="app">
-      <Header />
+      <Routes>
+        {/* Public routes - outside provider */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* All other routes - wrapped with provider + header */}
+        <Route path="/*" element={<MainLayout />} />
+      </Routes>
+      {/* <Header />
       <RolesProvider>
         <main className="container">
           <Routes>
@@ -43,7 +52,7 @@ export default function App() {
             />
           </Routes>
         </main>
-      </RolesProvider>
+      </RolesProvider> */}
     </div>
   );
 }
