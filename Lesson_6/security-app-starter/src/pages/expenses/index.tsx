@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 function formatDateInput(d: Date) {
   return d.toISOString().slice(0, 10);
 }
-
+export type UserDetailsResponse = {
+  email: string;
+  id: number;
+  role: "admin" | "viewer" | "configurator";
+};
 export default function Expenses() {
   const [from, setFrom] = useState(
     formatDateInput(new Date(new Date().setMonth(new Date().getMonth() - 2)))
@@ -14,6 +18,7 @@ export default function Expenses() {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [role, setRole] = useState<string>("");
 
   async function load() {
     setLoading(true);
@@ -34,8 +39,8 @@ export default function Expenses() {
 
   async function getUserDetails() {
     try {
-      const res = await getUserDetailsApi();
-      console.log(res);
+      const res: UserDetailsResponse = await getUserDetailsApi();
+      setRole(res.role);
     } catch (e: any) {
     } finally {
     }
@@ -50,7 +55,9 @@ export default function Expenses() {
     <section className="card">
       <div className="card-header">
         <h2>Expenses</h2>
-        <button className="btn"> Create New Expense</button>
+        {role === "admin" && (
+          <button className="btn"> Create New Expense</button>
+        )}
         {/* <div className="filters">
           <label>From <input type="date" value={from} onChange={e => setFrom(e.target.value)} /></label>
           <label>To <input type="date" value={to} onChange={e => setTo(e.target.value)} /></label>

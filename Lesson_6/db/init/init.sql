@@ -103,7 +103,8 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin@admin.com','1234',NULL,NULL,'2025-08-10 15:51:13'),(2,'eitan@gmail.com','2232',NULL,NULL,'2025-08-10 15:51:13'),(3,'yam@gmail.com','1112212',NULL,NULL,'2025-08-10 15:51:13'),(4,'tomerdan@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13'),(5,'ofek@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13'),(6,'kalimi@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13');
+INSERT INTO `users` VALUES (1,'admin@admin.com','1234',NULL,NULL,'2025-08-10 15:51:13'),(2,'viewer@viewer.com','1234',NULL,NULL,'2025-08-10 15:51:13'),(3,'yam@gmail.com','1112212',NULL,NULL,'2025-08-10 15:51:13'),(4,'tomerdan@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13'),(5,'ofek@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13'),(6,'kalimi@walla.com','12122343',NULL,NULL,'2025-08-10 15:51:13');
+
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -121,6 +122,7 @@ CREATE TABLE `northwind`.`users_roles` (
     ON UPDATE CASCADE);
 
 INSERT INTO `northwind`.`users_roles` (`user_id`, `role`) VALUES ('1', 'admin');
+INSERT INTO `northwind`.`users_roles` (`user_id`, `role`) VALUES ('2', 'viewer');
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
