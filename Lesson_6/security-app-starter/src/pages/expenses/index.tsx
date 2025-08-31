@@ -2,6 +2,7 @@ import { getUserDetailsApi } from "../../services/user.api";
 import { getExpensesByDates } from "../../services/expenses.api";
 import { useEffect, useState } from "react";
 import { RolesWrapper } from "@/components/RolesWrapper";
+import DataTable from "./dataTable";
 
 function formatDateInput(d: Date) {
   return d.toISOString().slice(0, 10);
@@ -17,7 +18,7 @@ export default function Expenses() {
   );
   const [to, setTo] = useState(formatDateInput(new Date()));
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<any[]>([]);
+  const [expenses, setExpenses] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [role, setRole] = useState<string>("");
 
@@ -29,8 +30,11 @@ export default function Expenses() {
         from: "2025-05-25 09:08:04",
         to: "2025-08-22 12:39:23",
       });
-      console.log(res);
-      setItems(res);
+      const sortedData = res.sort(
+        // @ts-ignore
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      setExpenses(sortedData);
     } catch (e: any) {
       setError(e?.message ?? "Failed to load");
     } finally {
@@ -60,27 +64,10 @@ export default function Expenses() {
         <RolesWrapper roles={["admin"]}>
           <button className="btn"> Create New Expense</button>
         </RolesWrapper>
-
-        {/* <div className="filters">
-          <label>From <input type="date" value={from} onChange={e => setFrom(e.target.value)} /></label>
-          <label>To <input type="date" value={to} onChange={e => setTo(e.target.value)} /></label>
-          <button className="btn" onClick={load} disabled={loading}>{loading ? 'Loading...' : 'Refresh'}</button>
-        </div> */}
       </div>
-      {/* {error && <div className="error">{error}</div>} */}
-      {/* <div className="grid">
-        {items.map((it, idx) => (
-          <div key={idx} className="tile">
-            <div className="tile-title">Session #{it.session ?? it.id ?? idx+1}</div>
-            <div className="tile-body">
-              <div><strong>Date:</strong> {it.date ?? it.createdAt ?? '-'}</div>
-              <div><strong>Country:</strong> {it.country ?? '-'}</div>
-              <div><strong>Amount:</strong> {it.amount ?? '-'}</div>
-            </div>
-          </div>
-        ))}
-        {!loading && items.length === 0 && <p className="muted">No results for the selected range.</p>}
-      </div> */}
+      <div>
+        <DataTable rows={expenses} />
+      </div>
     </section>
   );
 }

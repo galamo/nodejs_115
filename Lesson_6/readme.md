@@ -117,3 +117,7 @@ FROM
 3. show the user email at the header - dynamically according to the response
 
 - only after login - use context api!
+
+4. implement Create Expense Modal, supply datetime, desc, DDL - for categories, amount.
+5. send the request to the API ( POST )
+6. Reload the expenses page! getExpenses()
