@@ -70,14 +70,16 @@ router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         return res.status(500).json({ message: "Expenses Error" });
     }
 }));
-router.post("/expenses", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/expenses", (0, authorizations_1.validateAutMiddleware)(["admin", "configurator", "owner"]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.method, req.url);
     try {
         const { amount, category, date, description } = req.body;
         if (!amount || !category || !date) {
             return res
                 .status(400)
-                .json({ message: "Missing required fields: amount, category or date" });
+                .json({
+                message: "Missing required fields: amount, category or date",
+            });
         }
         const conn = yield (0, db_1.default)();
         const params = [amount, date, category, description || null];
