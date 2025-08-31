@@ -74,19 +74,17 @@ ORDER BY total_amount DESC
 2. run `npm i`
 3. run `npm run dev`
 
-
-
 # FS Flow 2
-1. Support new route client /orders 
-2. table will show the orders, employee name and customer name 
+
+1. Support new route client /orders
+2. table will show the orders, employee name and customer name
 3. show only the following information - orderId, employee full name, customer full name, shipping fee, ship city
 4. use mainAxios
 5. protect the entry point - authorization
 6. create api route GET /orders , implement query with JOIN
 
-
 ```sql
-SELECT 
+SELECT
     northwind.orders.id AS order_id,
     CONCAT(employees.first_name,
             ' ',
@@ -107,6 +105,14 @@ FROM
 
 ```
 
-# Define for /dates 
+# Define for /dates
+
 1. the following roles - ["admin", "viewer", "owner" , "configurator"]
 2. change the test according to the new roles ( in case needed )
+
+# Use the new API result /user/details
+
+1. support showing or not the "create new expesne" Button
+2. according the user role, admin, show it, not admin, hide.
+
+
