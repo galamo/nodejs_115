@@ -4,3 +4,7 @@
 - docker run test_4
 
 - docker exec -it "<ContaienrId>" sh 
+
+
+# Training 
+https://docs.docker.com/get-started/introduction/
