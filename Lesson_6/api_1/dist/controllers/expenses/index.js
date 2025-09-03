@@ -71,7 +71,7 @@ router.get("/dates", (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 }));
 router.post("/expenses", (0, authorizations_1.validateAutMiddleware)(["admin", "configurator", "owner"]), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.method, req.url);
+    console.log("Start FN  /expenses");
     try {
         const { amount, category, date, description } = req.body;
         if (!amount || !category || !date) {
