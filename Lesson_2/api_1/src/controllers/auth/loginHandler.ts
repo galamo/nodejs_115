@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { User, users } from "."
 export function login(user: User): Partial<User> | undefined {
     const toLowerUserName = user.userName?.toLowerCase()

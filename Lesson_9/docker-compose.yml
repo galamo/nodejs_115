@@ -6,25 +6,26 @@ services:
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
+     MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  nodeapp:
-    build: ./nodeapp
+  api:
+    build: ./api_1
     container_name: node-api
     restart: always
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: mysql
+      TOKEN: eitanBeshok
+      SECRET: eitanTheKingLikeFish
+      PASSWORD: root
+      DATABASE: northwind
       DB_PORT: 3306
-      DB_USER: appuser
+      DB_HOST: mysql
+      DB_USER: root
       DB_PASSWORD: apppass
     depends_on:
       - mysql

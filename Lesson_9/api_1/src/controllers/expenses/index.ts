@@ -21,9 +21,9 @@ router.get("/", async (req, res, next) => {
             FROM northwind.expenses
             ORDER BY date DESC`;
 
-        const [rows] = await conn.execute(getExpensesBetweenDates, []);
+        const rows = await conn?.execute(getExpensesBetweenDates, []);
 
-        return res.json({ data: rows });
+        return res.json({ data: Array.isArray(rows) && rows[0] });
     } catch (error) {
         res.json({ message: `there was an error ${error}` });
         return res.status(500).json({ message: "Expenses Error" });
@@ -61,9 +61,9 @@ router.get("/dates", async (req, res, next) => {
             WHERE date BETWEEN ? AND ?
             ORDER BY date ASC`;
 
-        const [rows] = await conn.execute(getExpensesBetweenDates, [from, to]);
+        const rows = await conn?.execute(getExpensesBetweenDates, [from, to]);
 
-        return res.json({ data: rows });
+        return res.json({ data: Array.isArray(rows) && rows[0] });
     } catch (error) {
         res.json({ message: `there was an error ${error}` });
         return res.status(500).json({ message: "Expenses Error" });
@@ -87,7 +87,7 @@ router.post(
 
             const conn = await getConnection();
             const params = [amount, date, category, description || null];
-            const [result]: any = await conn.execute(
+            const [result]: any = await conn?.execute(
                 `INSERT INTO northwind.expenses (amount, date, category, description)
              VALUES (?, ?, ?, ?)`,
                 params
