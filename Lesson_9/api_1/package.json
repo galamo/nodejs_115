@@ -1,0 +1,48 @@
+{
+  "name": "api_1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "___________1": "FOR DEV",
+    "compile": "tsc --watch",
+    "dev": "nodemon ./dist/index.js",
+    "all": "concurrently --names \"TSCompiler,Node_js_API\" --prefix-colors \"red,green\" \"npm run compile\" \"npm run dev\"",
+    "___________2": "FOR PRODUCTION",
+    "start": "node ./dist/index.js",
+    "test": "mocha",
+    "seed": "node ./seed/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.4",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "chai": "^5.2.1",
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/cors": "^2.8.19",
+    "@types/mocha": "^10.0.10",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^11.7.1",
+    "multer": "^2.0.2",
+    "mysql2": "^3.14.3",
+    "npm": "^11.5.1",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0",
+    "zod": "^4.0.5"
+  }
+}

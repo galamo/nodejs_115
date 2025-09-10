@@ -1,0 +1,241 @@
+:root {
+  --bg: #0a0f1c;
+  --panel: #0f1629;
+  --muted: #9bb0c3;
+  --text: #e6f1ff;
+  --accent: #00e1ff;
+  --accent2: #00ff85;
+  --danger: #ff4d6d;
+  --ring: 0 0 0 2px rgba(0, 225, 255, 0.35);
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+    Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(
+      1200px 600px at 80% -10%,
+      rgba(0, 225, 255, 0.06),
+      transparent
+    ),
+    radial-gradient(
+      1200px 600px at 20% 110%,
+      rgba(0, 255, 133, 0.06),
+      transparent
+    ),
+    var(--bg);
+  color: var(--text);
+}
+a {
+  color: var(--accent);
+}
+.app {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.container {
+  width: min(1100px, 94%);
+  margin: 18px auto 40px;
+}
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 225, 255, 0.05),
+    rgba(0, 255, 133, 0.05)
+  );
+  border-bottom: 1px solid #0b1b2e;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(8px);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.logo-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent2));
+  box-shadow: 0 0 14px #00e1ffaa;
+}
+.brand-text {
+  font-size: 1.05rem;
+}
+.brand-text .accent {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.nav {
+  display: flex;
+  gap: 14px;
+}
+.nav a {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text);
+  border: 1px solid transparent;
+}
+.nav a:hover {
+  border-color: #16304d;
+  background: #0f1b2f;
+}
+.nav .active {
+  border-color: #15466b;
+  box-shadow: var(--ring);
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.btn {
+  padding: 10px 14px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border: none;
+  color: #00101a;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.btn:hover {
+  filter: brightness(1.05);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid #16304d;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+.card {
+  background: linear-gradient(180deg, #0e1527, #0c1322);
+  border: 1px solid #13223a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(1, 20, 35, 0.5),
+    inset 0 0 40px rgba(0, 225, 255, 0.04);
+}
+.card h2 {
+  margin: 0 0 14px 0;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+input {
+  background: #0a1221;
+  border: 1px solid #1a2f4e;
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  outline: none;
+}
+input:focus {
+  border-color: #1f7ea3;
+  box-shadow: var(--ring);
+}
+.form {
+  display: grid;
+  gap: 12px;
+  max-width: 380px;
+}
+.error {
+  color: #ffd1dc;
+  background: rgba(255, 77, 109, 0.1);
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  padding: 10px;
+  border-radius: 10px;
+}
+.muted {
+  color: var(--muted);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.tile {
+  border: 1px solid #14243c;
+  border-radius: 14px;
+  padding: 14px;
+  background: #0b1426;
+  min-height: 120px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+.tile-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+@media (max-width: 520px) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .nav {
+    flex-wrap: wrap;
+  }
+}
+
+.login-page {
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center; /* center vertically */
+  height: 100vh; /* full viewport height */
+  /* background: #f4f6f8;       light background (optional) */
+}
+
+.login-card {
+  /* background: white; */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 400px;
+  text-align: center;
+}
