@@ -42,6 +42,7 @@ app.get("/", (req, res, next) => {
 
 app.get("/hc", async (req, res, next) => {
     const result = await ((await getConnection())?.execute("select * from northwind.customers", []))
+    console.log(`\x1b[31m HEALTH_CHECK \x1b[0m`);
     res.send("Api is Running___" + result?.length);
 });
 

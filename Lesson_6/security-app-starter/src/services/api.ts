@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Base axios instance with baseURL + auth header from localStorage
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
+  baseURL: 'http://localhost:3000',
   timeout: 20000
 })
 
