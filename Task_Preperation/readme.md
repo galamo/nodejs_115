@@ -98,4 +98,45 @@ KnowledgeLevels (
 }
 ```
 
----
+
+
+# How to start developing this Task ? (Ofek)
+1. Create MySQL scripts for tables? 
+2. Entry Points API? 
+3. UI - table
+4. Node.js Connect TO TABLE DB 
+5. Entry point? in API 
+6. Tets
+
+
+# How to start developing this Task ? (Talya)
+1. Client - Start with Axios client GET/PUT
+2. DB - create DB 
+3. Backend to DB
+4. Client connect to Server 
+
+
+# How to start developing this Task ? (Idan)
+1. Create DB - Structure, + data.sql, dummy data. 
+2. API - entry points
+3. Client templates - call api 
+
+
+
+# How to start developing this Task? 
+START WITH GITHUB REPO.
+
+1. Docker compose + Mysql + sql structure
+2. Workbench - check connectivity 
+3. + sql data. 
+4. API - Node.js Express + middelware + usefull  + ts build `npm run all` 
+5. API - Entry point -/ HC
+6. DB Connectivity from Node.js 
+7. API - /GET + integration test
+8. API - /PUT + integration test
+9. Client Application in react
+10. Components + Services: Api layer (7+8)
+11. UI finlization + validations + manual tests
+12. submittion 
+
+
