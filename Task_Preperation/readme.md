@@ -126,17 +126,17 @@ KnowledgeLevels (
 # How to start developing this Task? 
 START WITH GITHUB REPO.
 
-1. Docker compose + Mysql + sql structure
-2. Workbench - check connectivity 
-3. + sql data. 
-4. API - Node.js Express + middelware + usefull  + ts build `npm run all` 
-5. API - Entry point -/ HC
-6. DB Connectivity from Node.js 
-7. API - /GET + integration test
-8. API - /PUT + integration test
-9. Client Application in react
-10. Components + Services: Api layer (7+8)
-11. UI finlization + validations + manual tests
-12. submittion 
+1. Docker compose + Mysql + sql structure - 10m
+2. Workbench - check connectivity -  10m 
+3. + sql data. - 5m
+4. API - Node.js Express + middelware + usefull  + ts build `npm run all` - 25m
+5. API - Entry point -/ HC - 5m 
+6. DB Connectivity from Node.js ( hardcoded and then .env ) - 10m  
+7. API - /GET + integration test - 10m 
+8. API - /PUT + integration test- 10m 
+9. Client Application in react - 30m 
+10. Components + Services: Api layer (7+8) 10m 
+11. UI finlization + validations + manual tests - 20m 
+12. submittion - 1m 
 
 
