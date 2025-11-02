@@ -1,0 +1,17 @@
+# API
+api/node_modules/
+api/dist/
+api/*.log
+
+# Client
+client/node_modules/
+client/dist/
+client/dist-ssr/
+client/.vite/
+
+# General
+.DS_Store
+*.log
+.env
+.env.local
+
