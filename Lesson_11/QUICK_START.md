@@ -46,6 +46,8 @@ npm run dev
 - ✅ Get notified when users join/leave
 - ✅ Your messages are highlighted in purple
 - ✅ Auto-scroll to newest messages
+- ✅ **Message history** - Rejoin to see past messages
+- ✅ **Admin controls** - Log in as "admin" to remove users
 - ✅ Responsive design - try resizing the window
 
 ## Troubleshooting

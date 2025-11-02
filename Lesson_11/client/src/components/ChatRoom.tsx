@@ -21,6 +21,7 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [users, setUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,10 +30,15 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
     newSocket.on("connect", () => {
       console.log("Connected to server");
       newSocket.emit("join-room", { room: user.room, username: user.username });
+      setHistoryLoaded(false); // Reset when joining a new room
     });
 
-    newSocket.on("room-joined", (data: { users: string[] }) => {
+    newSocket.on("room-joined", (data: { users: string[]; history?: Message[] }) => {
       setUsers(data.users);
+      if (data.history && data.history.length > 0) {
+        setMessages(data.history);
+        setHistoryLoaded(true);
+      }
     });
 
     newSocket.on("receive-message", (message: Message) => {
@@ -63,6 +69,35 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
       ]);
     });
 
+    newSocket.on("user-removed-notification", (data: { username: string; users: string[] }) => {
+      setUsers(data.users);
+      setMessages((prev) => [
+        ...prev,
+        {
+          username: "System",
+          message: `${data.username} was removed from the room`,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+    });
+
+    newSocket.on("user-removed", (data: { message: string }) => {
+      // Handle being removed by admin
+      alert(data.message);
+      newSocket.close();
+      onLogout();
+    });
+
+    newSocket.on("remove-user-success", (data: { message: string }) => {
+      // Admin confirmation
+      console.log(data.message);
+    });
+
+    newSocket.on("remove-user-error", (data: { message: string }) => {
+      // Admin error handling
+      alert(data.message);
+    });
+
     setSocket(newSocket);
 
     return () => {
@@ -88,6 +123,18 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
         username: user.username,
         message: message.trim(),
       });
+    }
+  };
+
+  const handleRemoveUser = (targetUsername: string) => {
+    if (socket && user.username === "admin") {
+      if (window.confirm(`Remove user "${targetUsername}" from the room?`)) {
+        socket.emit("remove-user", {
+          room: user.room,
+          adminUsername: user.username,
+          targetUsername,
+        });
+      }
     }
   };
 
@@ -120,13 +167,27 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
           <ul className="users-list">
             {users.map((username, index) => (
               <li key={index} className={username === user.username ? "current-user" : ""}>
-                {username}
+                <span>{username}</span>
+                {user.username === "admin" && username !== "admin" && (
+                  <button
+                    className="remove-user-button"
+                    onClick={() => handleRemoveUser(username)}
+                    title={`Remove ${username}`}
+                  >
+                    🗑️
+                  </button>
+                )}
               </li>
             ))}
           </ul>
         </aside>
 
         <div className="chat-messages-container">
+          {historyLoaded && messages.length > 0 && (
+            <div className="history-indicator">
+              📜 {messages.length} message{messages.length !== 1 ? 's' : ''} loaded
+            </div>
+          )}
           <MessageList messages={messages} currentUser={user.username} />
           <div ref={messagesEndRef} />
         </div>

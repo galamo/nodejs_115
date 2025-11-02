@@ -7,7 +7,9 @@ A modern, real-time chat application built with React (Vite) and Node.js (Socket
 - 🔐 **User Authentication**: Enter username and room name to join
 - 💬 **Real-time Messaging**: Instant message delivery using WebSockets
 - 🏠 **Room-based Chat**: Support for multiple chat rooms
+- 📜 **Message History**: Persisted conversation history per room
 - 👥 **User List**: See who's online in the current room
+- 👮 **Admin Controls**: Admin user can remove users from rooms
 - 📱 **Responsive Design**: Works on desktop and mobile devices
 - 🎨 **Modern UI**: Beautiful gradient design with smooth animations
 
@@ -100,9 +102,11 @@ The React app will start on `http://localhost:5173`
 - `join-room`: Join a specific chat room
 - `send-message`: Send a message to all room members
 - `leave-room`: Leave the current room
+- `remove-user`: Admin removes a user from the room
 - `receive-message`: Receive messages from other users
 - `user-joined`: Notification when a user joins
 - `user-left`: Notification when a user leaves
+- `user-removed`: Notification when admin removes a user
 
 ### Frontend (Client)
 
@@ -132,6 +136,22 @@ The React app will start on `http://localhost:5173`
 - Multiple rooms can exist simultaneously
 - Each room maintains its own user list
 - Room names are case-sensitive
+
+### Message History
+
+- Messages are stored per room on the server
+- New users joining a room receive the full chat history
+- History persists even when all users leave the room
+- Each message includes timestamp and sender information
+
+### Admin Controls
+
+- Only users with username "admin" have removal privileges
+- Admins see a delete icon (🗑️) next to each user in the list
+- Clicking the icon removes that user from the room
+- Removed users are immediately disconnected and logged out
+- All users are notified when someone is removed by admin
+- Confirmation dialog prevents accidental removals
 
 ### User Experience
 
@@ -168,12 +188,15 @@ Open multiple browser windows/tabs to test multi-user functionality:
 2. Open `http://localhost:5173` in multiple tabs
 3. Use different usernames but join the same room
 4. Send messages and see them appear in real-time
+5. **Test History**: Leave and rejoin a room to see message history
+6. **Test Admin**: Log in as "admin" to see remove buttons and test user removal
 
 ## Future Enhancements
 
 Possible additions:
 - User authentication (JWT tokens)
-- Message history storage (database)
+- Persistent message storage (database with SQL/NoSQL)
+- Message history pagination for large rooms
 - Private direct messaging
 - File/image sharing
 - Emoji reactions

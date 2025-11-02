@@ -20,7 +20,29 @@ interface RoomUsers {
   [room: string]: Set<string>;
 }
 
+// Store username to socket mapping for room management
+interface UsernameToSocket {
+  [username: string]: Socket;
+}
+
+interface RoomSockets {
+  [room: string]: UsernameToSocket;
+}
+
+// Store message history per room
+interface Message {
+  username: string;
+  message: string;
+  timestamp: string;
+}
+
+interface RoomMessages {
+  [room: string]: Message[];
+}
+
 const roomUsers: RoomUsers = {};
+const roomMessages: RoomMessages = {};
+const roomSockets: RoomSockets = {};
 
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);
@@ -34,8 +56,21 @@ io.on("connection", (socket: Socket) => {
       roomUsers[room] = new Set();
     }
     
+    // Initialize message history if it doesn't exist
+    if (!roomMessages[room]) {
+      roomMessages[room] = [];
+    }
+    
+    // Initialize socket mapping if it doesn't exist
+    if (!roomSockets[room]) {
+      roomSockets[room] = {};
+    }
+    
     // Add user to room
     roomUsers[room].add(username);
+    
+    // Store socket mapping
+    roomSockets[room][username] = socket;
     
     // Join socket.io room
     socket.join(room);
@@ -49,11 +84,12 @@ io.on("connection", (socket: Socket) => {
       users: Array.from(roomUsers[room]),
     });
     
-    // Send confirmation and current users to the joining user
+    // Send confirmation, current users, and message history to the joining user
     socket.emit("room-joined", {
       room,
       username,
       users: Array.from(roomUsers[room]),
+      history: roomMessages[room],
     });
   });
 
@@ -63,12 +99,21 @@ io.on("connection", (socket: Socket) => {
     
     console.log(`Message in ${room} from ${username}: ${message}`);
     
-    // Broadcast to all users in the room
-    io.to(room).emit("receive-message", {
+    // Create message object
+    const messageObj: Message = {
       username,
       message,
       timestamp: new Date().toISOString(),
-    });
+    };
+    
+    // Store message in history
+    if (!roomMessages[room]) {
+      roomMessages[room] = [];
+    }
+    roomMessages[room].push(messageObj);
+    
+    // Broadcast to all users in the room
+    io.to(room).emit("receive-message", messageObj);
   });
 
   // Leave room
@@ -78,10 +123,15 @@ io.on("connection", (socket: Socket) => {
     if (roomUsers[room]) {
       roomUsers[room].delete(username);
       
-      // Clean up empty rooms
+      // Clean up empty rooms (but keep message history)
       if (roomUsers[room].size === 0) {
         delete roomUsers[room];
       }
+    }
+    
+    // Remove from socket mapping
+    if (roomSockets[room]) {
+      delete roomSockets[room][username];
     }
     
     socket.leave(room);
@@ -94,6 +144,66 @@ io.on("connection", (socket: Socket) => {
       room,
       users: roomUsers[room] ? Array.from(roomUsers[room]) : [],
     });
+  });
+
+  // Remove user (admin only)
+  socket.on("remove-user", (data: { room: string; adminUsername: string; targetUsername: string }) => {
+    const { room, adminUsername, targetUsername } = data;
+    
+    // Check if requester is admin
+    if (adminUsername !== "admin") {
+      socket.emit("remove-user-error", {
+        message: "Only admin can remove users"
+      });
+      return;
+    }
+    
+    // Check if target user exists in the room
+    if (!roomSockets[room] || !roomSockets[room][targetUsername]) {
+      socket.emit("remove-user-error", {
+        message: `User ${targetUsername} not found in room ${room}`
+      });
+      return;
+    }
+    
+    // Get target user's socket
+    const targetSocket = roomSockets[room][targetUsername];
+    
+    // Remove from room
+    if (roomUsers[room]) {
+      roomUsers[room].delete(targetUsername);
+      
+      // Clean up empty rooms
+      if (roomUsers[room].size === 0) {
+        delete roomUsers[room];
+      }
+    }
+    
+    // Remove from socket mapping
+    delete roomSockets[room][targetUsername];
+    
+    // Disconnect the user
+    targetSocket.leave(room);
+    
+    // Notify the removed user
+    targetSocket.emit("user-removed", {
+      room,
+      message: "You have been removed from the room by admin"
+    });
+    
+    // Notify everyone else in the room
+    socket.to(room).emit("user-removed-notification", {
+      username: targetUsername,
+      room,
+      users: roomUsers[room] ? Array.from(roomUsers[room]) : [],
+    });
+    
+    // Confirm to admin
+    socket.emit("remove-user-success", {
+      message: `User ${targetUsername} has been removed from the room`
+    });
+    
+    console.log(`Admin ${adminUsername} removed ${targetUsername} from room ${room}`);
   });
 
   // Handle disconnect
