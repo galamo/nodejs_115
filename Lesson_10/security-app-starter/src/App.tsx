@@ -15,6 +15,7 @@ export default function App() {
         {/* Public routes - outside provider */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+       
 
         {/* All other routes - wrapped with provider + header */}
         <Route path="/*" element={<MainLayout />} />
@@ -56,3 +57,4 @@ export default function App() {
     </div>
   );
 }
+

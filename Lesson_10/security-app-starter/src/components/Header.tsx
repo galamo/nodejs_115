@@ -23,6 +23,7 @@ export default function Header() {
 
       <nav className="nav">
         <Link to="/user"> {email ? email.split("@")?.[0] : ""}</Link>
+        <Link to="/socket">Socket</Link>
         <Link
           className={location.pathname === "/data" ? "active" : ""}
           to="/data"

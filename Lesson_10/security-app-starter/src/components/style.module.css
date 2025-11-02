@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f4f4f4;
+  width: 480px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.button:hover {
+  background: #005fcc;
+}
+
+.savedMessage {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #2a6d32;
+}

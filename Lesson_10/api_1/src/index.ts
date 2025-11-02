@@ -11,13 +11,16 @@ import uploaderRouter from "./controllers/uploader";
 import path from "path";
 import { ERRORS } from "./enum/httpStatus";
 import authorizationMiddleware, {
-    ReqLocal,
+  ReqLocal,
 } from "./middleware/authorizationMiddleware";
 import logger from "./logger";
 import addRequestId from "./middleware/addRequestId";
 import cors from "cors";
 import getConnection from "./db";
-getConnection()
+import http from "http";
+import { Server } from "socket.io";
+
+getConnection();
 // setTimeout(async () => {
 //     const result = await (await getConnection()).query("select * from customers")
 //     console.log(result)
@@ -37,13 +40,15 @@ app.use(limiter);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.get("/hc", async (req, res, next) => {
-    const result = await ((await getConnection())?.execute("select * from northwind.customers", []))
-    console.log(`\x1b[31m HEALTH_CHECK \x1b[0m`);
-    res.send("Api is Running___" + result?.length);
+  const result = await (
+    await getConnection()
+  )?.execute("select * from northwind.customers", []);
+  console.log(`\x1b[31m HEALTH_CHECK \x1b[0m`);
+  res.send("Api is Running___" + result?.length);
 });
 
 app.use("/auth", authRouter);
@@ -54,31 +59,60 @@ app.use("/api/expenses", expensesRouter);
 app.use("/api/user", userRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-    logger.error(`${error.message} reqeustId: ${(req as ReqLocal).requestId}`);
-    console.log(error)
-    switch (error.message) {
-        case ERRORS.BAD_REQUEST: {
-            return res.status(400).send("Bad Request");
-        }
-        case ERRORS.UNAUTH: {
-            return res.status(401).send("Unauthorized___");
-        }
-        default: {
-            return res
-                .status(500)
-                .send(
-                    "Something went wrong Yam is working to fix it & flight to America"
-                );
-        }
+  logger.error(`${error.message} reqeustId: ${(req as ReqLocal).requestId}`);
+  console.log(error);
+  switch (error.message) {
+    case ERRORS.BAD_REQUEST: {
+      return res.status(400).send("Bad Request");
     }
+    case ERRORS.UNAUTH: {
+      return res.status(401).send("Unauthorized___");
+    }
+    default: {
+      return res
+        .status(500)
+        .send(
+          "Something went wrong Yam is working to fix it & flight to America"
+        );
+    }
+  }
 });
 
-app.listen(PORT, (err) => {
-    if (err) {
-        console.log(`\x1b[31m${err.message}\x1b[0m`);
-        logger.error(`Api is running on port ${PORT}!!!`);
-    } else {
-        logger.info(`Api is running on port ${PORT}!!!`);
-        console.log(`Api is running on port ${PORT}`);
-    }
+const httpServer = http.createServer(app);
+
+httpServer.listen(PORT, (err: any) => {
+  if (err) {
+    console.log(`\x1b[31m${err.message}\x1b[0m`);
+    logger.error(`Api is running on port ${PORT}!!!`);
+  } else {
+    logger.info(`Api is running on port ${PORT}!!!`);
+    console.log(`Api is running on port ${PORT}`);
+  }
+});
+
+const userNamesSessions: { [key: string]: string } = {};
+const io = new Server(httpServer, { cors: { origin: "*" } });
+io.on("connection", (socket) => {
+  console.log("User Connected", socket.id);
+
+  socket.on("sendMessage", (msg) => {
+    console.log("do something with the msg", msg);
+
+    io.emit(
+      "messageFromApi",
+      (userNamesSessions[socket.id] || "NoUser") + "=>" + msg
+    );
+  });
+
+  socket.on("connectUserName", (userName) => {
+    console.log("Connecting User Name", userName, socket.id);
+    userNamesSessions[socket.id] = userName;
+    console.log(userNamesSessions);
+  });
+
+  socket.on("disconnect", (msg) => {
+    delete userNamesSessions[socket.id];
+    console.log("User Disconnected", socket.id);
+  });
+  // ??
 });
