@@ -46,6 +46,7 @@ const ChatRoom: React.FC<{ user: User; onLogout: () => void }> = ({
         //   setHistoryLoaded(false); // Reset when joining a new room
         // });
 
+        // Convert this function promised based!!!
         newSocket.on("room-joined", (data: { users: string[]; history?: Message[] }) => {
             setUsers(data.users);
             if (data.history && data.history.length > 0) {
