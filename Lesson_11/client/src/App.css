@@ -73,6 +73,54 @@
   border-color: #667eea;
 }
 
+.room-select {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  background: white;
+  cursor: pointer;
+}
+
+.room-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.room-select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.room-input-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.room-input-container input {
+  flex: 1;
+}
+
+.cancel-room-button {
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #666;
+  min-width: 40px;
+}
+
+.cancel-room-button:hover {
+  background: #e0e0e0;
+  border-color: #ccc;
+}
+
 .login-button {
   padding: 14px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
