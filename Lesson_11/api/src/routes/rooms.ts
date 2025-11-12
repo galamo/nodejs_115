@@ -3,10 +3,17 @@ import Room from "../models/Room";
 
 const router = express.Router();
 
+async function getRooms(){
+    const rooms = await Room.find({}).select("id name").exec();
+    return rooms;
+}
+
+// couchbase/ opensearch / document db? 
+
 // GET all rooms
 router.get("/", async (req: Request, res: Response) => {
     try {
-        const rooms = await Room.find({}).select("id name").exec();
+        const rooms = await getRooms()
         res.json(rooms);
     } catch (error) {
         console.error("Error fetching rooms:", error);
@@ -18,7 +25,9 @@ router.get("/", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
     try {
         const { name } = req.body;
-
+        // - _ numbers, text, 20 max characters 
+        // - validation
+        // TODO: input valdiation
         if (!name || !name.trim()) {
             return res.status(400).json({ error: "Room name is required" });
         }
