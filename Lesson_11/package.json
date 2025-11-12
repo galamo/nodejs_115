@@ -1,0 +1,17 @@
+{
+    "name": "lesson_11",
+    "version": "1.0.0",
+    "description": "A modern, real-time chat application built with React (Vite) and Node.js (Socket.IO).",
+    "main": "index.js",
+    "scripts": {
+        "start:services": "concurrently -n \"api-producer,notification-consumer\" -c \"blue,green\" \"npm run api-producer\" \"npm run notification-consumer\"",
+        "notification-consumer": "cd ./notification-app && node index.js",
+        "api-producer": "cd ./api && npm run watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^9.2.1"
+    }
+}

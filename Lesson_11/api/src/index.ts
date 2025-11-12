@@ -6,6 +6,7 @@ import { connectDatabase } from "./config/database";
 import User from "./models/User";
 import Room from "./models/Room";
 import roomsRouter from "./routes/rooms";
+import { notifyAdmin } from "./notification.handler";
 
 const app = express();
 const httpServer = createServer(app);
@@ -70,6 +71,20 @@ io.on("connection", (socket: Socket) => {
                     name: room.trim(),
                 });
                 await newRoom.save();
+                async function notifyRoomName(name: string) {
+                    if (room.includes("fuck")) {
+                        console.log(`Room Name: ${name} is forbidden, watch out you will be banned!`)
+
+                        const { sendToQueue } = await notifyAdmin()
+                        sendToQueue(`Room Name: ${name} is forbidden, watch out you will be banned!`)
+                        //@ts-ignore
+                        // channel.sendToQueue("email_notifications_bad_room_name", Buffer.from(JSON.stringify({ name })))
+
+                        console.log(`Room Name: ${name} is forbidden, watch out you will be banned!`)
+                    }
+
+                }
+                notifyRoomName(room)
                 console.log(`Room "${room}" saved to database`);
             }
         } catch (error: any) {

@@ -3,7 +3,7 @@ import Room from "../models/Room";
 
 const router = express.Router();
 
-async function getRooms(){
+async function getRooms() {
     const rooms = await Room.find({}).select("id name").exec();
     return rooms;
 }
@@ -28,10 +28,20 @@ router.post("/", async (req: Request, res: Response) => {
         // - _ numbers, text, 20 max characters 
         // - validation
         // TODO: input valdiation
+
+
+
         if (!name || !name.trim()) {
             return res.status(400).json({ error: "Room name is required" });
         }
+        console.log("room name", name)
+        function monitorRoomName(name: string) {
+            if (name.includes("fuck")) {
+                console.log(`Room Name: ${name} is forbidden, watch out you will be banned!`)
+            }
 
+        }
+        monitorRoomName(name)
         // Generate a unique ID (using room name as base, or you can use UUID)
         const roomId = name.trim().toLowerCase().replace(/\s+/g, "-");
 
