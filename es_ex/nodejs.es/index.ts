@@ -24,8 +24,11 @@ async function run(): Promise<void> {
 
     // Index document into Elasticsearch
     const response = await client.index({
-      index: "alerts",
-      document,
+      index: "users",
+      document: {
+        userName: "kalimi",
+        level_down: { password: "dofhdkfjh", age: "dafdaf" },
+      },
     });
 
     // Refresh the index to make the document searchable immediately
