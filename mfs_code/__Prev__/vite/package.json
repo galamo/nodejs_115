@@ -1,0 +1,18 @@
+{
+  "name": "vite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently -k -p \"[{name}]\" -n \"host,remoteA,remoteB\" -c \"red,green,blue\" \"pnpm run host\" \"pnpm run remoteA\" \"pnpm run remoteB\"  ",
+    "host": "cd host && pnpm run dev",
+    "remoteA": "cd remote-a && pnpm run dev",
+    "remoteB": "cd remote-b && pnpm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

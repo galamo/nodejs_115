@@ -1,0 +1,13 @@
+{
+  "name": "pnpm-example-latest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo test passed",
+    "cleanup": "pnpm exec rm -rf node_modules"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

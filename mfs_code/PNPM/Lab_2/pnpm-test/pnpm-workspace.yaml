@@ -1,0 +1,9 @@
+packages:
+  # all packages in direct subdirs of packages/
+  - "packages/*"
+  - "./api-##pnpm"
+  - "./api-##pnpm2"
+  # all packages in subdirs of components/
+  - "components/**"
+  # exclude packages that are inside test directories
+  - "!**/test/**"

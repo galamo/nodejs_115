@@ -1,0 +1,4 @@
+packages:
+  - 'main-app'
+  - 'shared-lib'
+  - 'country-data'

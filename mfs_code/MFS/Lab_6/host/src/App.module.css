@@ -1,0 +1,26 @@
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  grid-template-rows: min-content 1fr min-content;
+  gap: 1rem;
+  color-scheme: light dark;
+  background-color: #ffffff;
+  color: #242424;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
+.darkMode {
+  color: #ffffff;
+  background-color: #242424;
+}

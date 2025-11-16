@@ -1,0 +1,27 @@
+{
+  "name": "vite-micro-frontends",
+  "version": "1.0.0",
+  "description": "An MFE example using vite and react",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --parallel --filter \"./**\" build",
+    "serve": "pnpm --parallel --filter \"./**\" preview",
+    "build:remotes": "pnpm --parallel --filter \"./remotes/**\" build",
+    "serve:remotes": "pnpm --parallel --filter \"./remotes/**\" serve",
+    "dev:host": "pnpm --filter \"./host\" dev",
+    "dev:presentation": "pnpm --filter \"./presentation\" dev",
+    "stop": "kill-port --port 5000,5001,5002,5003,4321",
+    "add:module": "pnpm add -r"
+  },
+  "keywords": [
+    "mfe",
+    "vite",
+    "react"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.3.3",
+    "kill-port": "^2.0.1"
+  }
+}

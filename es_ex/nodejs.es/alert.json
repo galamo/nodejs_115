@@ -1,0 +1,7 @@
+{
+  "alertId": "A1001",
+  "type": "CPU_Usage",
+  "severity": "High",
+  "message": "CPU usage exceeded 90% on server01",
+  "timestamp": "2025-11-16T10:30:00Z"
+}

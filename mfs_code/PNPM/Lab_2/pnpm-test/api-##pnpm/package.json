@@ -1,0 +1,17 @@
+{
+  "name": "api-##pnpm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios-mock-adapter": "^1.22.0",
+    "express": "^4.19.2",
+    "bring-them-home":"1.0.0"
+  }
+}
