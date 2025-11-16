@@ -1,6 +1,8 @@
 import "./App.css";
 import FlightsComponent from "flights/Flights";
-import PlanesComponent from "flights/Planes";
+// @ts-ignore
+import CarsComponent from "cars/Cars";
+// import PlanesComponent from "flights/Planes";
 
 function App() {
   return (
@@ -28,7 +30,9 @@ function App() {
         <div
           style={{ border: "1px solid black", height: "80vh", width: "50vw" }}
         >
-          <PlanesComponent />
+          <CarsComponent />
+          {/* <PlanesComponent /> */}
+          {/* CarsPage - remote key vite config  */}
         </div>
       </div>
     </>

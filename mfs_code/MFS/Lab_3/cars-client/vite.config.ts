@@ -9,7 +9,7 @@ export default defineConfig({
       name: "cars",
       filename: "remoteEntry.js",
       exposes: {
-        APP: "./src/App",
+        "./Cars": "./src/Cars.tsx",
       },
       shared: ["react", "react-dom"],
     }),
